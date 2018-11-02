@@ -1,0 +1,28 @@
+.orange{
+  background-color: #ffa500;
+  padding: 2px;
+  margin-left: -3px;
+  border-radius: 10%;
+  color: black;
+}
+
+.profilePicContainer{
+  padding-left: 10px;
+}
+
+.profilePic{
+  border-radius: 50%;
+}
+
+.profileLink:hover{
+  text-decoration: none;
+}
+
+.listingImage{
+  border-radius: 10%;
+  margin-bottom: 10px;
+}
+
+.listing{
+  margin: 10px;
+}
