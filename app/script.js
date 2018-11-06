@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
     allListings.push(new Listing('gaspump2000', 'lilpump_pp.jpg', '(Very Rare) Basketball', 'Oct 27, 2018', '1000000', 'USED', 'Sports', 'basketball.jpeg', 'Ultra rare basketball used and signed by DROSE himself (not pictured). Willing to exchange for another Iced Out Rolex.', 0));
     allListings.push(new Listing('bobbyandnotor', 'logic_pp.jpeg', 'Minecraft PS3 Edition', 'Oct 15, 2018', '12', 'DAMAGED', 'Games', 'minecraft.jpg', 'Minecraft PS3 edition in case. Mild scratches on disk but fully functional.', 0));
     displayListings();
-})
+});
 
 function displayListings() {
     for (let i = 0; i < allListings.length; i++) {
@@ -52,7 +52,7 @@ function createListingDOM(listing) {
 
     const profilePicture = document.createElement('img');
     profilePicture.setAttribute('width', '40');
-    profilePicture.setAttribute('src', 'img/'+listing.profilePicture);
+    profilePicture.setAttribute('src', 'img/' + listing.profilePicture);
     profilePicture.classList.add('profilePic');
 
     profilePictureContainer.appendChild(profilePicture);
@@ -129,7 +129,7 @@ function createListingDOM(listing) {
 
     const image = document.createElement('img');
     image.classList.add('listingImage');
-    image.setAttribute('src', 'img/'+listing.thumbnail);
+    image.setAttribute('src', 'img/' + listing.thumbnail);
 
     imageContainer.appendChild(image);
     listingElement.appendChild(imageContainer);
