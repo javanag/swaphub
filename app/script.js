@@ -56,6 +56,7 @@ searchSubmit.addEventListener('click', function (){
   event.preventDefault();
   const queryString = searchBar.value.toLowerCase().trim();
   if(queryString.length > 0){
+    searchBar.value = '';
     clearAllDisplayedListings();
     pushListingBreadCrumb('Searching for \"' + queryString + '\"');
     filterListingsByQuery(queryString);
@@ -195,7 +196,7 @@ function createListingDOM(listing) {
 
     const image = document.createElement('img');
     image.classList.add('listingImage');
-    image.setAttribute('src', 'img/'+listing.thumbnail);
+    image.setAttribute('src', 'img/' + listing.thumbnail);
 
     const imageLinkToListing = document.createElement('a');
     imageLinkToListing.setAttribute('href', '#');//TODO:
