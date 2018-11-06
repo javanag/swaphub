@@ -59,6 +59,7 @@ html {
     transition: box-shadow 350ms;
     text-overflow: ellipsis;
     padding-bottom: 10px;
+    padding-top: 10px;
     margin-bottom: 30px;
 }
 
