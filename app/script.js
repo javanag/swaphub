@@ -29,20 +29,20 @@ document.addEventListener('DOMContentLoaded', function () {
     allListings.push(new Listing('bobbyandnotor', 'logic_pp.jpeg', 'Minecraft PS3 Edition', 'Oct 15, 2018', '12', 'DAMAGED', 'Games', 'minecraft.jpg', 'Minecraft PS3 edition in case. Mild scratches on disk but fully functional.', 0));
     allListings.push(new Listing('bobbyandnotor', 'logic_pp.jpeg', 'Vintage Crime and Punishment', 'Oct 25, 2018', '40', 'USED', 'Books', 'dosto.png', 'My grandma gave me this ultra rare masterpiece.', 0));
     allListings.push(new Listing('laflame92cactus', 'travis_pp.jpg', '[SALE] My Mixtape', 'Oct 24, 2018', '10', 'NEW', 'Music', 'astroworld.jpg', 'Please everybody buy my tape I swear it\'s fire.', 0));
-    allListings.push(new Listing('gaspump2000', 'lilpump_pp.jpg', 'BEST Aloe Plant', 'Oct 15, 2018', '5', 'USED', 'Plants and Animals', 'aloe.jpg', 'I usually only grow other types of plants, I\'ll let this go cheap.', 0));
+    allListings.push(new Listing('gaspump2000', 'lilpump_pp.jpg', 'BEST Aloe Plant', 'Oct 15, 2018', '5', 'USED', 'Plants & Animals', 'aloe.jpg', 'I usually only grow other types of plants, I\'ll let this go cheap.', 0));
     allListings.push(new Listing('bobbyandnotor', 'logic_pp.jpeg', '(Almost) New Ferrari!', 'Oct 10, 2018', '97000', 'USED', 'Vehicles', 'whip.jpeg', 'This is the fastest on the track hands down!', 0));
-    allListings.push(new Listing('laflame92cactus', 'travis_pp.jpg', 'Broken Sunbeam Toaster', 'Sep 29, 2018', '2', 'DAMAGED', 'Furniture/Appliance', 'toaster.jpeg', 'For parts (bread not included, stop asking)', 0));
+    allListings.push(new Listing('laflame92cactus', 'travis_pp.jpg', 'Broken Sunbeam Toaster', 'Sep 29, 2018', '2', 'DAMAGED', 'Furniture & Appliance', 'toaster.jpeg', 'For parts (bread not included, stop asking)', 0));
     //Render recent listings pulled from server;
     displayAllListings();
 });
 
 listingNavLink.addEventListener('click', resetListingView);
+listingBreadcrumb.querySelector('#breadcrumbAnchor').addEventListener('click', resetListingView);
 
 function resetListingView(){
   clearAllDisplayedListings();
   displayAllListings();
-
-  //TODO: update breadcrumbs!
+  popListingBreadCrumb();
 }
 
 function displayAllListings(){
@@ -57,11 +57,8 @@ searchSubmit.addEventListener('click', function (){
   const queryString = searchBar.value.toLowerCase().trim();
   if(queryString.length > 0){
     clearAllDisplayedListings();
-    //Use timeout to really sell the server accessing bit!
-    const timeout = 200 + Math.floor((Math.random() * 800) + 1);
-    setTimeout(function(){
-      filterListingsByQuery(queryString);
-    }, timeout);
+    pushListingBreadCrumb('Searching for \"' + queryString + '\"');
+    filterListingsByQuery(queryString);
   }
 });
 
@@ -81,12 +78,12 @@ function filterListingsByCategory(e){
     //This section represents loading all listings from "server" that match
     //the corresponding category type
     for(let i = 0; i < allListings.length; i++){
-      console.log(allListings[i].category + ' ' + category);
       if(allListings[i].category == category){
         const element = createListingDOM(allListings[i]);
         listingsContainer.appendChild(element);
       }
     }
+    pushListingBreadCrumb(category);
   }
 }
 
@@ -101,7 +98,6 @@ function filterListingsByQuery(queryString){
     //Very rudimentary search, just find at least one keyword in key strings.
     //This section represents loading all listings from "server" that match
     //the corresponding search query
-    console.log(allListings[i].username + ' ' + queryString);
     if(allListings[i].category.toLowerCase().indexOf(queryString) >= 0 || allListings[i].title.toLowerCase().indexOf(queryString) >= 0 || allListings[i].description.toLowerCase().indexOf(queryString) >= 0 || allListings[i].username.toLowerCase().indexOf(queryString) >= 0){
       const element = createListingDOM(allListings[i]);
       listingsContainer.appendChild(element);
@@ -214,4 +210,34 @@ function createListingDOM(listing) {
 
     listingElement.appendChild(description);
     return listingElement;
+}
+
+function pushListingBreadCrumb(navigationText){
+  popListingBreadCrumb();
+  const recentListings = listingBreadcrumb.querySelector('#breadcrumbAnchor');
+  recentListings.classList.remove('active');
+  recentListings.removeChild(recentListings.firstChild);
+  const recentListingsLink = document.createElement('a');
+  recentListingsLink.setAttribute('href', '#');//TODO:
+  recentListingsLink.appendChild(document.createTextNode('Recent Listings'));
+
+  recentListings.appendChild(recentListingsLink);
+
+  const newBreadCrumb = document.createElement('li');
+  newBreadCrumb.classList.add('breadcrumb-item');
+  newBreadCrumb.classList.add('active');
+  newBreadCrumb.appendChild(document.createTextNode(navigationText));
+
+  listingBreadcrumb.appendChild(newBreadCrumb);
+}
+
+function popListingBreadCrumb(){
+  if(listingBreadcrumb.childNodes.length > 2){
+    listingBreadcrumb.removeChild(listingBreadcrumb.lastChild);
+
+    const recentListings = listingBreadcrumb.querySelector('#breadcrumbAnchor');
+    recentListings.classList.add('active');
+    recentListings.removeChild(recentListings.firstChild);
+    recentListings.appendChild(document.createTextNode('Recent Listings'));
+  }
 }
