@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 const listingsContainer = document.querySelector('#listingsContainer');
 const displayedListings = [];
 const allListings = [];
@@ -52,7 +52,7 @@ function createListingDOM(listing) {
 
     const profilePicture = document.createElement('img');
     profilePicture.setAttribute('width', '40');
-    profilePicture.setAttribute('src', listing.profilePicture);
+    profilePicture.setAttribute('src', 'img/'+listing.profilePicture);
     profilePicture.classList.add('profilePic');
 
     profilePictureContainer.appendChild(profilePicture);
@@ -129,7 +129,7 @@ function createListingDOM(listing) {
 
     const image = document.createElement('img');
     image.classList.add('listingImage');
-    image.setAttribute('src', listing.thumbnail);
+    image.setAttribute('src', 'img/'+listing.thumbnail);
 
     imageContainer.appendChild(image);
     listingElement.appendChild(imageContainer);
