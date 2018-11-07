@@ -20,6 +20,7 @@ const navItems = {
         itemsArray[0].firstChild.innerText = "Listings";
         itemsArray[0].firstChild.appendChild(currView);
         itemsArray[0].setAttribute("id", "listingNavLink");
+        itemsArray[0].firstChild.setAttribute("href", "listings.html");
         // Categories
         itemsArray[1].className += " dropdown";
         itemsArray[1].firstChild.className += " dropdown-toggle";
@@ -45,7 +46,7 @@ const navItems = {
         dropdownDivider.className = "dropdown-divider";
         dropdownContainer.appendChild(dropdownDivider);
         dropdownContainer.appendChild(miscCategory);
-        itemsArray[1].appendChild(dropdownContainer)
+        itemsArray[1].appendChild(dropdownContainer);
         // Sell
         itemsArray[2].firstChild.innerText = "Sell";
         // About
@@ -53,7 +54,7 @@ const navItems = {
     },
     "profile": function (ulContainer) {
         const itemsArray = [];
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 3; i++) {
             itemsArray.push(document.createElement('li'));
             itemsArray[i].className = "nav-item";
             itemsArray[i].innerHTML = '<a class="nav-link" href="#"></a>';
@@ -64,8 +65,13 @@ const navItems = {
         currView.className = "sr-only";
         currView.innerText = "(current)";
         // Listings
-        itemsArray[0].className += " active";
         itemsArray[0].firstChild.innerText = "Listings";
+        itemsArray[0].setAttribute("id", "listingNavLink");
+        itemsArray[0].firstChild.setAttribute("href", "listings.html");
+        // Sell
+        itemsArray[1].firstChild.innerText = "Sell";
+        // About
+        itemsArray[2].firstChild.innerText = "About";
     },
 };
 
@@ -130,13 +136,9 @@ function createNavbar(siteView) {
     profileImg.className = "profilePic";
     profileImg.setAttribute("width", "40");
     profileImg.setAttribute("src", "img/yeezy_pp.png");
-    profilePic.appendChild(profileImg);
+    profilePic.appendChild(profileImg);//todo: load from user object
     profilePic.appendChild(document.createTextNode("@siiiiiiiiilver_surffffeeeeer"));
     endContainer.appendChild(profilePicContainer);
-
-
-
-
 
 
     navContainer.appendChild(endContainer);
