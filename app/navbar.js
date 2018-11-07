@@ -19,6 +19,7 @@ const navItems = {
         itemsArray[0].className += " active";
         itemsArray[0].firstChild.innerText = "Listings";
         itemsArray[0].firstChild.appendChild(currView);
+        itemsArray[0].setAttribute("id", "listingNavLink");
         // Categories
         itemsArray[1].className += " dropdown";
         itemsArray[1].firstChild.className += " dropdown-toggle";
@@ -26,6 +27,7 @@ const navItems = {
         itemsArray[1].firstChild.setAttribute("role", "button");
         itemsArray[1].firstChild.innerText = "Categories";
         const dropdownContainer = document.createElement('div');
+        dropdownContainer.setAttribute("id", "categoryDropDown");
         dropdownContainer.className = "dropdown-menu";
         dropdownContainer.setAttribute("aria-labelledby", "navbarDropdown");
         for (let i = 0; i < categories.length; i++) {
@@ -106,12 +108,14 @@ function createNavbar(siteView) {
     const searchInput = document.createElement('input');
     searchInput.className = "form-control mr-sm-2 text-light bg-dark";
     searchInput.setAttribute("type", "search");
+    searchInput.setAttribute("id", "searchBar");
     searchInput.setAttribute("placeholder", "Search");
     searchInput.setAttribute("aria-label", "Search");
     searchForm.appendChild(searchInput);
     const searchButton = document.createElement('button');
     searchButton.className = "btn btn-outline-warning my-2 my-sm-0";
     searchButton.setAttribute("type", "submit");
+    searchButton.setAttribute("id", "searchSubmit");
     searchButton.innerText = "Search";
     searchForm.appendChild(searchButton);
     endContainer.appendChild(searchForm);
