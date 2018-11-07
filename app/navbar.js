@@ -19,7 +19,6 @@ const navItems = {
         itemsArray[0].className += " active";
         itemsArray[0].firstChild.innerText = "Listings";
         itemsArray[0].firstChild.appendChild(currView);
-        itemsArray[0].setAttribute('id', 'listingNavLink');
         // Categories
         itemsArray[1].className += " dropdown";
         itemsArray[1].firstChild.className += " dropdown-toggle";
@@ -29,7 +28,6 @@ const navItems = {
         const dropdownContainer = document.createElement('div');
         dropdownContainer.className = "dropdown-menu";
         dropdownContainer.setAttribute("aria-labelledby", "navbarDropdown");
-        dropdownContainer.setAttribute("id", "categoryDropDown");
         for (let i = 0; i < categories.length; i++) {
             let catergory = document.createElement('a');
             catergory.className = "dropdown-item";
@@ -72,8 +70,8 @@ const navItems = {
 function createNavbar(siteView) {
     console.log("Making navbar...");
     const navContainer = document.createElement('nav');
-    navContainer.className = "navbar navbar-expand-lg navbar-dark bg-dark sticky-top";
-
+    navContainer.className = "navbar navbar-expand-lg navbar-dark bg-dark navbar-fixed-top";
+    // Logo
     const logoText = document.createElement('a');
     logoText.className = "navbar-brand text-white";
     logoText.setAttribute('href', '#');
@@ -87,33 +85,61 @@ function createNavbar(siteView) {
     navButton.setAttribute('data-target', '#navbarNav');
     navButton.setAttribute('aria-controls', 'navbarNav');
     navButton.setAttribute('aria-expanded', 'false');
-    navButton.setAttribute('aria-label', 'Toggle navigation');
+    navButton.setAttribute('aria-labeal', 'Toggle navigation');
     navButton.innerHTML = '<span class="navbar-toggler-icon"></span>';
     navContainer.appendChild(navButton);
     // nav-items
     const navListContainer = document.createElement('div');
     navListContainer.className = "collapse navbar-collapse";
-    navListContainer.id = "navbarNav";
+    navListContainer.id = "navebarNav";
     const navList = document.createElement('ul');
     navList.className = "navbar-nav";
     navListContainer.appendChild(navList);
-
     navItems[siteView](navList);
-
-    const searchBar = document.createElement('input');
-    searchBar.classList.add('form-control');
-    searchBar.classList.add('mr-sm-2');
-    searchBar.classList.add('text-light');
-    searchBar.classList.add('bg-dark');
-    searchBar.setAttribute('id', 'searchBar');
-    searchBar.setAttribute('type', 'search');
-    searchBar.setAttribute('placeHolder', 'Search');
-    searchBar.setAttribute('aria-label', 'Search');
-
     navContainer.appendChild(navListContainer);
+    // justify to end
+    const endContainer = document.createElement('div');
+    endContainer.className = "collapse navbar-collapse justify-content-end";
+    // search form
+    const searchForm = document.createElement('form');
+    searchForm.className = "form-inline my-2 my-lg-0";
+    const searchInput = document.createElement('input');
+    searchInput.className = "form-control mr-sm-2 text-light bg-dark";
+    searchInput.setAttribute("type", "search");
+    searchInput.setAttribute("placeholder", "Search");
+    searchInput.setAttribute("aria-label", "Search");
+    searchForm.appendChild(searchInput);
+    const searchButton = document.createElement('button');
+    searchButton.className = "btn btn-outline-warning my-2 my-sm-0";
+    searchButton.setAttribute("type", "submit");
+    searchButton.innerText = "Search";
+    searchForm.appendChild(searchButton);
+    endContainer.appendChild(searchForm);
+    //profile picture Container
+    const profilePicContainer = document.createElement("span");
+    profilePicContainer.className = "profilePicContainer";
+    const profilePic = document.createElement("a");
+    profilePic.className = "profileLink text-light";
+    profilePic.setAttribute("href", "profile.html");
+    profilePicContainer.appendChild(profilePic);
+    const profileImg = document.createElement('img');
+    profileImg.className = "profilePic";
+    profileImg.setAttribute("width", "40");
+    profileImg.setAttribute("src", "img/yeezy_pp.png");
+    profilePic.appendChild(profileImg);
+    profilePic.appendChild(document.createTextNode("@siiiiiiiiilver_surffffeeeeer"));
+    endContainer.appendChild(profilePicContainer);
 
-    formDiv.appendChild(searchBar);
-    formDiv.appendChild(searchSubmit);
+
+
+
+
+
+    navContainer.appendChild(endContainer);
+    // justify to end ends
+
 
     document.body.insertBefore(navContainer, document.body.firstChild);
+
+
 }
