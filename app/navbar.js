@@ -51,6 +51,22 @@ const navItems = {
         // About
         itemsArray[3].firstChild.innerText = "About";
     },
+    "profile": function (ulContainer) {
+        const itemsArray = [];
+        for (let i = 0; i < 4; i++) {
+            itemsArray.push(document.createElement('li'));
+            itemsArray[i].className = "nav-item";
+            itemsArray[i].innerHTML = '<a class="nav-link" href="#"></a>';
+
+            ulContainer.appendChild(itemsArray[i]);
+        }
+        const currView = document.createElement('span');
+        currView.className = "sr-only";
+        currView.innerText = "(current)";
+        // Listings
+        itemsArray[0].className += " active";
+        itemsArray[0].firstChild.innerText = "Listings";
+    },
 };
 
 function createNavbar(siteView) {
@@ -63,7 +79,7 @@ function createNavbar(siteView) {
     logoText.setAttribute('href', '#');
     logoText.innerHTML = 'Swap <span class="orange">Hub';
     navContainer.appendChild(logoText);
-
+    // nav-item button
     const navButton = document.createElement('button');
     navButton.className = "navbar-toggler";
     navButton.setAttribute('type', 'button');
@@ -74,7 +90,7 @@ function createNavbar(siteView) {
     navButton.setAttribute('aria-label', 'Toggle navigation');
     navButton.innerHTML = '<span class="navbar-toggler-icon"></span>';
     navContainer.appendChild(navButton);
-
+    // nav-items
     const navListContainer = document.createElement('div');
     navListContainer.className = "collapse navbar-collapse";
     navListContainer.id = "navbarNav";
@@ -82,10 +98,7 @@ function createNavbar(siteView) {
     navList.className = "navbar-nav";
     navListContainer.appendChild(navList);
 
-    const formDiv = document.createElement('div');
-    formDiv.classList.add('collapse');
-    formDiv.classList.add('navbar-collapse');
-    formDiv.classList.add('justify-content-end');
+    navItems[siteView](navList);
 
     const searchBar = document.createElement('input');
     searchBar.classList.add('form-control');
@@ -97,21 +110,10 @@ function createNavbar(siteView) {
     searchBar.setAttribute('placeHolder', 'Search');
     searchBar.setAttribute('aria-label', 'Search');
 
-    const searchSubmit = document.createElement('button');
-    searchSubmit.setAttribute('id', 'searchSubmit');
-    searchSubmit.setAttribute('type', 'submit');
-    searchSubmit.classList.add('btn');
-    searchSubmit.classList.add('btn-outline-warning');
-    searchSubmit.classList.add('my-2');
-    searchSubmit.classList.add('my-sm-0');
-    searchSubmit.classList.add('bg-dark');
-    searchSubmit.appendChild(document.createTextNode('Search'));
+    navContainer.appendChild(navListContainer);
 
     formDiv.appendChild(searchBar);
     formDiv.appendChild(searchSubmit);
 
-    navItems[siteView](navList);
-    navContainer.appendChild(navListContainer);
-    navContainer.appendChild(formDiv);
     document.body.insertBefore(navContainer, document.body.firstChild);
 }
