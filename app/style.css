@@ -68,3 +68,10 @@ html {
 .listing:hover {
     box-shadow: 0 0px 20px 0 rgba(0, 0, 1, 0.2), 0 0px 20px 0 rgba(0, 0, 1, 0.19);
 }
+
+/*Profile style*/
+#userInfoContainer{
+    padding-top: 20px;
+}
+
+/*end of Profile style*/
