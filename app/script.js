@@ -147,7 +147,7 @@ function createListingDOM(listing) {
     title.classList.add('text-center');
 
     const titleLink = document.createElement('a');
-    titleLink.setAttribute('href', '#');//TODO:
+    titleLink.setAttribute('href', 'yeezyListing.html');//TODO:
     titleLink.classList.add('listingTitleLink');
 
     const titleLinkH5 = document.createElement('h5');
