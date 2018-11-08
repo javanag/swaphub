@@ -39,71 +39,72 @@ document.addEventListener('DOMContentLoaded', function () {
 listingNavLink.addEventListener('click', resetListingView);
 listingBreadcrumb.querySelector('#breadcrumbAnchor').addEventListener('click', resetListingView);
 
-function resetListingView(){
-  clearAllDisplayedListings();
-  displayAllListings();
-  popListingBreadCrumb();
-}
-
-function displayAllListings(){
-  for (let i = 0; i < allListings.length; i++) {
-      const element = createListingDOM(allListings[i]);
-      listingsContainer.appendChild(element);
-  }
-}
-
-searchSubmit.addEventListener('click', function (){
-  event.preventDefault();
-  const queryString = searchBar.value.toLowerCase().trim();
-  if(queryString.length > 0){
-    searchBar.value = '';
+function resetListingView() {
     clearAllDisplayedListings();
-    pushListingBreadCrumb('Searching for \"' + queryString + '\"');
-    filterListingsByQuery(queryString);
-  }
+    displayAllListings();
+    popListingBreadCrumb();
+}
+
+function displayAllListings() {
+    for (let i = 0; i < allListings.length; i++) {
+        const element = createListingDOM(allListings[i]);
+        listingsContainer.appendChild(element);
+    }
+}
+
+searchSubmit.addEventListener('click', function () {
+    event.preventDefault();
+    const queryString = searchBar.value.toLowerCase().trim();
+    if (queryString.length > 0) {
+        searchBar.value = '';
+        clearAllDisplayedListings();
+        pushListingBreadCrumb('Searching for \"' + queryString + '\"');
+        filterListingsByQuery(queryString);
+    }
 });
 
 categoryDropDown.addEventListener('click', filterListingsByCategory);
-function filterListingsByCategory(e){
-  const allCategories = categoryDropDown.querySelectorAll('.dropdown-item');
-  const trigger = e.target;
-  let category = undefined;
-  for(let i = 0; i < allCategories.length; i++){
-    if(trigger.textContent == allCategories[i].textContent){
-      category = trigger.textContent;
-      break;
+
+function filterListingsByCategory(e) {
+    const allCategories = categoryDropDown.querySelectorAll('.dropdown-item');
+    const trigger = e.target;
+    let category = undefined;
+    for (let i = 0; i < allCategories.length; i++) {
+        if (trigger.textContent == allCategories[i].textContent) {
+            category = trigger.textContent;
+            break;
+        }
     }
-  }
-  if(category != undefined){
-    clearAllDisplayedListings();
-    //This section represents loading all listings from "server" that match
-    //the corresponding category type
-    for(let i = 0; i < allListings.length; i++){
-      if(allListings[i].category == category){
-        const element = createListingDOM(allListings[i]);
-        listingsContainer.appendChild(element);
-      }
+    if (category != undefined) {
+        clearAllDisplayedListings();
+        //This section represents loading all listings from "server" that match
+        //the corresponding category type
+        for (let i = 0; i < allListings.length; i++) {
+            if (allListings[i].category == category) {
+                const element = createListingDOM(allListings[i]);
+                listingsContainer.appendChild(element);
+            }
+        }
+        pushListingBreadCrumb(category);
     }
-    pushListingBreadCrumb(category);
-  }
 }
 
-function clearAllDisplayedListings(){
-  while (listingsContainer.firstChild) {
-    listingsContainer.removeChild(listingsContainer.firstChild);
-  }
+function clearAllDisplayedListings() {
+    while (listingsContainer.firstChild) {
+        listingsContainer.removeChild(listingsContainer.firstChild);
+    }
 }
 
-function filterListingsByQuery(queryString){
-  for(let i = 0; i < allListings.length; i++){
-    //Very rudimentary search, just find at least one keyword in key strings.
-    //This section represents loading all listings from "server" that match
-    //the corresponding search query
-    if(allListings[i].category.toLowerCase().indexOf(queryString) >= 0 || allListings[i].title.toLowerCase().indexOf(queryString) >= 0 || allListings[i].description.toLowerCase().indexOf(queryString) >= 0 || allListings[i].username.toLowerCase().indexOf(queryString) >= 0){
-      const element = createListingDOM(allListings[i]);
-      listingsContainer.appendChild(element);
+function filterListingsByQuery(queryString) {
+    for (let i = 0; i < allListings.length; i++) {
+        //Very rudimentary search, just find at least one keyword in key strings.
+        //This section represents loading all listings from "server" that match
+        //the corresponding search query
+        if (allListings[i].category.toLowerCase().indexOf(queryString) >= 0 || allListings[i].title.toLowerCase().indexOf(queryString) >= 0 || allListings[i].description.toLowerCase().indexOf(queryString) >= 0 || allListings[i].username.toLowerCase().indexOf(queryString) >= 0) {
+            const element = createListingDOM(allListings[i]);
+            listingsContainer.appendChild(element);
+        }
     }
-  }
 }
 
 function createListingDOM(listing) {
@@ -119,7 +120,7 @@ function createListingDOM(listing) {
 
     const profilePicture = document.createElement('img');
     profilePicture.setAttribute('width', '32');
-    profilePicture.setAttribute('src', 'img/'+listing.profilePicture);
+    profilePicture.setAttribute('src', 'img/' + listing.profilePicture);
     profilePicture.classList.add('profilePic');
 
     profilePictureContainer.appendChild(profilePicture);
@@ -213,32 +214,32 @@ function createListingDOM(listing) {
     return listingElement;
 }
 
-function pushListingBreadCrumb(navigationText){
-  popListingBreadCrumb();
-  const recentListings = listingBreadcrumb.querySelector('#breadcrumbAnchor');
-  recentListings.classList.remove('active');
-  recentListings.removeChild(recentListings.firstChild);
-  const recentListingsLink = document.createElement('a');
-  recentListingsLink.setAttribute('href', '#');//TODO:
-  recentListingsLink.appendChild(document.createTextNode('Recent Listings'));
+function pushListingBreadCrumb(navigationText) {
+    popListingBreadCrumb();
+    const recentListings = listingBreadcrumb.querySelector('#breadcrumbAnchor');
+    recentListings.classList.remove('active');
+    recentListings.removeChild(recentListings.firstChild);
+    const recentListingsLink = document.createElement('a');
+    recentListingsLink.setAttribute('href', '#');//TODO:
+    recentListingsLink.appendChild(document.createTextNode('Recent Listings'));
 
-  recentListings.appendChild(recentListingsLink);
+    recentListings.appendChild(recentListingsLink);
 
-  const newBreadCrumb = document.createElement('li');
-  newBreadCrumb.classList.add('breadcrumb-item');
-  newBreadCrumb.classList.add('active');
-  newBreadCrumb.appendChild(document.createTextNode(navigationText));
+    const newBreadCrumb = document.createElement('li');
+    newBreadCrumb.classList.add('breadcrumb-item');
+    newBreadCrumb.classList.add('active');
+    newBreadCrumb.appendChild(document.createTextNode(navigationText));
 
-  listingBreadcrumb.appendChild(newBreadCrumb);
+    listingBreadcrumb.appendChild(newBreadCrumb);
 }
 
-function popListingBreadCrumb(){
-  if(listingBreadcrumb.childNodes.length > 2){
-    listingBreadcrumb.removeChild(listingBreadcrumb.lastChild);
+function popListingBreadCrumb() {
+    if (listingBreadcrumb.childNodes.length > 2) {
+        listingBreadcrumb.removeChild(listingBreadcrumb.lastChild);
 
-    const recentListings = listingBreadcrumb.querySelector('#breadcrumbAnchor');
-    recentListings.classList.add('active');
-    recentListings.removeChild(recentListings.firstChild);
-    recentListings.appendChild(document.createTextNode('Recent Listings'));
-  }
+        const recentListings = listingBreadcrumb.querySelector('#breadcrumbAnchor');
+        recentListings.classList.add('active');
+        recentListings.removeChild(recentListings.firstChild);
+        recentListings.appendChild(document.createTextNode('Recent Listings'));
+    }
 }
