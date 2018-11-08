@@ -126,10 +126,12 @@ function createProfileView(userInfo) {
     console.log("Displaying user info...");
     const profileElement = document.createElement('div');
     profileElement.className = "row";
-    userInfoContainer.appendChild(profileElement);
+    // userInfoContainer.appendChild(profileElement);
+    userInfoContainer.prepend(profileElement);
 
     const profilePictureContainer = document.createElement('div');
     profilePictureContainer.className = 'd-inline-block';
+    profilePictureContainer.id = "profilePicContainer";
     profileElement.appendChild(profilePictureContainer);
 
     const profilePicture = document.createElement('img');
@@ -145,48 +147,136 @@ function createProfileView(userInfo) {
 
     const profileInfo = document.createElement('div');
     profileInfo.className = 'd-inline-block align-self-center ml-5';
+    profileInfo.id = "profileInfoContainer";
     profileElement.appendChild(profileInfo);
 
     const fieldKeys = document.createElement('div');
-    fieldKeys.className = 'd-inline-block align-middle text-right font-weight-bold';
+    fieldKeys.className = 'd-inline-block align-middle text-right font-weight-bold h-100';
     profileInfo.appendChild(fieldKeys);
 
     const fieldValues = document.createElement('div');
-    fieldValues.className = 'd-inline-block align-middle ml-3';
+    fieldValues.className = 'd-inline-block align-middle ml-3 h-100';
     profileInfo.appendChild(fieldValues);
 
     const firstName = document.createElement('div');
+    firstName.className = "col-form-label";
     firstName.innerText = "First Name:";
     fieldKeys.appendChild(firstName);
 
     const firstNameVal = document.createElement('div');
+    firstNameVal.className = "form-control-plaintext";
     firstNameVal.innerText = userInfo.firstName;
     fieldValues.appendChild(firstNameVal);
 
     const lastName = document.createElement('div');
+    lastName.className = "col-form-label";
     lastName.innerText = "Last Name:";
     fieldKeys.appendChild(lastName);
 
     const lastNameVal = document.createElement('div');
+    lastNameVal.className = "form-control-plaintext";
     lastNameVal.innerText = userInfo.lastName;
     fieldValues.appendChild(lastNameVal);
 
     const email = document.createElement('div');
+    email.className = "col-form-label";
     email.innerText = "E-mail:";
     fieldKeys.appendChild(email);
 
     const emailVal = document.createElement('div');
+    emailVal.className = "form-control-plaintext";
     emailVal.innerText = userInfo.email;
     fieldValues.appendChild(emailVal);
 
     const rating = document.createElement('div');
+    rating.className = "col-form-label";
     rating.innerText = "Rating:";
     fieldKeys.appendChild(rating);
 
     const ratingVal = document.createElement('div');
+    ratingVal.className = "form-control-plaintext";
     ratingVal.innerText = userInfo.userRate();
     fieldValues.appendChild(ratingVal);
 
+    const editProfileBtn = document.createElement('button');
+    editProfileBtn.className = 'btn btn-outline-warning btn-block mt-3';
+    editProfileBtn.id = "editProfileButton";
+    editProfileBtn.setAttribute("type", "button");
+    editProfileBtn.innerText = "Edit Info";
+    profileInfo.appendChild(editProfileBtn);
+
+    editProfileBtn.addEventListener("click", editProfileMode);
+
+    //Enter profile edit mode
+    function editProfileMode() {
+        const submitButton = document.createElement("button");
+        submitButton.innerText = "Submit";
+        submitButton.setAttribute("type", "submit");
+        submitButton.setAttribute("form", "editForm");
+        submitButton.className = "btn btn-primary btn-block mt-3";
+        profileInfo.replaceChild(submitButton, editProfileBtn);
+
+        const editForm = document.createElement("form");
+        editForm.setAttribute("name", "input");
+        editForm.setAttribute("id", "editForm");
+        editForm.setAttribute("method", "post");
+        // editForm.setAttribute("action","javascript:;");
+        // editForm.setAttribute ("onsubmit",updateInfo(this));
+        editForm.addEventListener("submit", updateInfo);
+        profileInfo.appendChild(editForm);
+
+        const firstNameInput = document.createElement("input");
+        firstNameInput.className = "form-control";
+        firstNameInput.id = "firstNameInput";
+        firstNameInput.setAttribute("type", "text");
+        firstNameInput.setAttribute("placeholder", userToDisplay.firstName);
+        fieldValues.replaceChild(firstNameInput, firstNameVal);
+
+        const lastNameInput = document.createElement("input");
+        lastNameInput.className = "form-control";
+        lastNameInput.id = "lastNameInput";
+        lastNameInput.setAttribute("placeholder", userToDisplay.lastName);
+        fieldValues.replaceChild(lastNameInput, lastNameVal);
+
+        const emailInput = document.createElement("input");
+        emailInput.className = "form-control";
+        emailInput.id = "emailInput";
+        emailInput.setAttribute("placeholder", userToDisplay.email);
+        fieldValues.replaceChild(emailInput, emailVal);
+
+        const passwordInput = document.createElement("input");
+        passwordInput.className = "form-control";
+        passwordInput.id = "passwordInput";
+        passwordInput.setAttribute("placeholder", "*".repeat(userToDisplay.password.length));
+        fieldValues.replaceChild(passwordInput, ratingVal);
+        const password = document.createElement('div');
+        password.className = "form-control-plaintext";
+        password.innerText = "Password:";
+        fieldKeys.replaceChild(password, rating);
+    }
+
+    //updates the profileView and object.
+    function updateInfo(e) {
+        e.preventDefault();
+        console.log("updaing info...");
+        let tempValue;
+        tempValue = document.querySelector('#firstNameInput').value;
+        if (tempValue != "")
+            userToDisplay.firstName = tempValue;
+        tempValue = document.querySelector('#lastNameInput').value;
+        if (tempValue != "")
+            userToDisplay.lastName = tempValue
+        tempValue = document.querySelector('#emailInput').value;
+        if (tempValue != "")
+            userToDisplay.email = tempValue;
+        tempValue = document.querySelector('#passwordInput').value;
+        if (tempValue != "")
+            userToDisplay.password = tempValue;
+
+        // profileInfo.replaceChild(editProfileBtn, submitButton);
+        userInfoContainer.removeChild(profileElement);
+        createProfileView(userToDisplay)
+    }
 }
 
 
