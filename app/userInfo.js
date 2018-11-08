@@ -123,6 +123,7 @@ for (let j = 0; j < 2; j++) {
 
 //creates user's profile
 function createProfileView(userInfo) {
+    console.log("Displaying user info...");
     const profileElement = document.createElement('div');
     profileElement.className = "row";
     userInfoContainer.appendChild(profileElement);
@@ -191,6 +192,7 @@ function createProfileView(userInfo) {
 
 //display user's listings
 function displayUserListings(userListings) {
+    console.log("Displaying user's listings...");
     const listingsElement = document.createElement('div');
     listingsElement.className = "row";
     const listingTextNode = document.createElement('div');
@@ -205,7 +207,7 @@ function displayUserListings(userListings) {
     }
 }
 
-//copied from script.js
+//copied from script.js (without user part)
 function createListingDOM(listing) {
     const listingElement = document.createElement('div');
     listingElement.classList.add('col-6');
@@ -288,6 +290,7 @@ function createListingDOM(listing) {
 
 //display user's Reviews:
 function displayUserReviews(userReviews) {
+    console.log("Displaying user's reviews...");
     const reviewsElement = document.createElement('div');
     reviewsElement.className = "row";
     const reviewTextNode = document.createElement('div');
@@ -299,7 +302,6 @@ function displayUserReviews(userReviews) {
     for (let i = 0; i < userReviews.length; i++) {
         const element = createReviewDOM(userReviews[i]);
         reviewsElement.appendChild(element);
-        console.log(i, userReviews[i]);
     }
 }
 
@@ -350,16 +352,14 @@ function createReviewDOM(review) {
 }
 
 let userToDisplay;
-console.log(location.hash)
 if (!location.hash)
 //randomizing for fun
     userToDisplay = userArray[Math.floor(Math.random() * 3)];
-else{
+else {
     let urlHash = location.hash.substr(1);
     userToDisplay = userMap[urlHash];
 }
-console.log(userToDisplay);
-//let randomUser = userArray[Math.floor(Math.random() * 3)];
+
 createProfileView(userToDisplay);
 displayUserListings(userToDisplay.userListings);
 displayUserReviews(userToDisplay.userReviews);
