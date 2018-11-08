@@ -75,7 +75,15 @@ const navItems = {
     },
 };
 
-function createNavbar(siteView) {
+// let loggedIn = true;
+// if (!location.hash)
+// //randomizing for fun
+//     loggedIn = false;
+// else {
+//     let userToDisplay = location.hash.substr(1);
+// }
+
+function createNavbar(siteView, loggedIn = true) {
     console.log("Making navbar...");
     const navContainer = document.createElement('nav');
     navContainer.className = "navbar navbar-expand-lg navbar-dark bg-dark navbar-fixed-top";
@@ -125,27 +133,34 @@ function createNavbar(siteView) {
     searchButton.innerText = "Search";
     searchForm.appendChild(searchButton);
     endContainer.appendChild(searchForm);
-    //profile picture Container
-    const profilePicContainer = document.createElement("span");
-    profilePicContainer.className = "profilePicContainer";
-    const profilePic = document.createElement("a");
-    profilePic.className = "profileLink text-light";
-    profilePic.setAttribute("href", "profile.html");
-    profilePicContainer.appendChild(profilePic);
-    const profileImg = document.createElement('img');
-    profileImg.className = "profilePic";
-    profileImg.setAttribute("width", "40");
-    profileImg.setAttribute("src", "img/yeezy_pp.png");
-    profilePic.appendChild(profileImg);//todo: load from user object
-    profilePic.appendChild(document.createTextNode("@siiiiiiiiilver_surffffeeeeer"));
-    endContainer.appendChild(profilePicContainer);
-
+    if (loggedIn){
+        //profile picture Container
+        const profilePicContainer = document.createElement("span");
+        profilePicContainer.className = "profilePicContainer";
+        const profilePic = document.createElement("a");
+        profilePic.className = "profileLink text-light";
+        profilePic.setAttribute("href", "profile.html");
+        profilePicContainer.appendChild(profilePic);
+        const profileImg = document.createElement('img');
+        profileImg.className = "profilePic";
+        profileImg.setAttribute("width", "40");
+        profileImg.setAttribute("src", "img/yeezy_pp.png");
+        profilePic.appendChild(profileImg);//todo: load from user object
+        profilePic.appendChild(document.createTextNode("@siiiiiiiiilver_surffffeeeeer"));
+        endContainer.appendChild(profilePicContainer);
+    }
+    else{
+        const loginButton = document.createElement('a');
+        loginButton.className = "btn btn-warning my-2 my-sm-0 ml-3";
+        loginButton.setAttribute("role", "button");
+        loginButton.setAttribute("href", "login.html");
+        loginButton.setAttribute("id", "loginButton");
+        loginButton.innerText = "Login";
+        endContainer.appendChild(loginButton);
+    }
 
     navContainer.appendChild(endContainer);
     // justify to end ends
 
-
-    document.body.insertBefore(navContainer, document.body.firstChild);
-
-
+    document.body.prepend(navContainer, document.body.firstChild);
 }
