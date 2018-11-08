@@ -449,7 +449,3 @@ else {
     let urlHash = location.hash.substr(1);
     userToDisplay = userMap[urlHash];
 }
-
-createProfileView(userToDisplay);
-displayUserListings(userToDisplay.userListings);
-displayUserReviews(userToDisplay.userReviews);
