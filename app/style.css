@@ -17,6 +17,8 @@ html {
 .profilePic {
     border-radius: 50%;
     margin: 5px;
+    border: #ffa500;
+    border-style: solid;
 }
 
 .profileLink:hover {
