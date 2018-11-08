@@ -58,8 +58,8 @@ searchSubmit.addEventListener('click', function () {
     if (queryString.length > 0) {
         searchBar.value = '';
         clearAllDisplayedListings();
-        pushListingBreadCrumb('Searching for \"' + queryString + '\"');
-        filterListingsByQuery(queryString);
+        const resultCount = filterListingsByQuery(queryString);
+        pushListingBreadCrumb('Searching for \"' + queryString + '\"', resultCount);
     }
 });
 
@@ -69,6 +69,7 @@ function filterListingsByCategory(e) {
     const allCategories = categoryDropDown.querySelectorAll('.dropdown-item');
     const trigger = e.target;
     let category = undefined;
+    let resultCount = 0;
     for (let i = 0; i < allCategories.length; i++) {
         if (trigger.textContent == allCategories[i].textContent) {
             category = trigger.textContent;
@@ -81,11 +82,12 @@ function filterListingsByCategory(e) {
         //the corresponding category type
         for (let i = 0; i < allListings.length; i++) {
             if (allListings[i].category == category) {
+                resultCount++;
                 const element = createListingDOM(allListings[i]);
                 listingsContainer.appendChild(element);
             }
         }
-        pushListingBreadCrumb(category);
+        pushListingBreadCrumb(category, resultCount);
     }
 }
 
@@ -96,15 +98,18 @@ function clearAllDisplayedListings() {
 }
 
 function filterListingsByQuery(queryString) {
+    let resultCount = 0;
     for (let i = 0; i < allListings.length; i++) {
         //Very rudimentary search, just find at least one keyword in key strings.
         //This section represents loading all listings from "server" that match
         //the corresponding search query
         if (allListings[i].category.toLowerCase().indexOf(queryString) >= 0 || allListings[i].title.toLowerCase().indexOf(queryString) >= 0 || allListings[i].description.toLowerCase().indexOf(queryString) >= 0 || allListings[i].username.toLowerCase().indexOf(queryString) >= 0) {
             const element = createListingDOM(allListings[i]);
+            resultCount++;
             listingsContainer.appendChild(element);
         }
     }
+    return resultCount;
 }
 
 function createListingDOM(listing) {
@@ -214,7 +219,7 @@ function createListingDOM(listing) {
     return listingElement;
 }
 
-function pushListingBreadCrumb(navigationText) {
+function pushListingBreadCrumb(navigationText, resultCount) {
     popListingBreadCrumb();
     const recentListings = listingBreadcrumb.querySelector('#breadcrumbAnchor');
     recentListings.classList.remove('active');
@@ -228,8 +233,15 @@ function pushListingBreadCrumb(navigationText) {
     const newBreadCrumb = document.createElement('li');
     newBreadCrumb.classList.add('breadcrumb-item');
     newBreadCrumb.classList.add('active');
-    newBreadCrumb.appendChild(document.createTextNode(navigationText));
-
+    let resultString = '';
+    if(resultCount <= 0){
+        resultString = ' (' + 'No results' + ')';
+    }else if(resultCount == 1){
+        resultString = ' (' + resultCount + ' result' + ')';
+    }else if(resultCount > 1){
+        resultString = ' (' + resultCount + ' results' + ')';
+    }
+    newBreadCrumb.appendChild(document.createTextNode(navigationText + resultString));
     listingBreadcrumb.appendChild(newBreadCrumb);
 }
 
