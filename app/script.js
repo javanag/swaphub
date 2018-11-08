@@ -132,7 +132,7 @@ function createListingDOM(listing) {
 
     const profileLink = document.createElement('a');
     listingElement.classList.add('profileLink');
-    profileLink.setAttribute('href', '#');//TODO:
+    profileLink.setAttribute('href', 'profile.html#'+listing.username);//TODO:
     profileLink.appendChild(document.createTextNode(listing.username));
 
     const date = document.createElement('div');

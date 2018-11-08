@@ -74,12 +74,19 @@ const Listing = function (username, profilePicture, title, date, price, conditio
     this.likes = likes;
 };
 
+
 //dummy data
 const userArray = [
     new UserInfo('Chris P.', 'Bacon', 'smokyChris@yomamail.com', 'laflame92cactus', '1234321', 'travis_pp.jpg',),
     new UserInfo('Mike', 'Litoris', 'cameltoe13@zee.com', 'gaspump2000', '1234321', 'lilpump_pp.jpg'),
     new UserInfo('Ben', 'Dover', 'nosoap69@nohomo.com', 'bobbyandnotor', '1234321', 'logic_pp.jpeg',),
 ];
+
+const userMap = {
+    "laflame92cactus": userArray[0],
+    "gaspump2000": userArray[1],
+    "bobbyandnotor": userArray[2]
+};
 
 const allListings = [
     new Listing('laflame92cactus', 'travis_pp.jpg', 'Adidas Yeezy 750 Boost', 'Oct 31, 2018', '2560.56', 'NEW', 'Fashion', 'yeezy750feet.jpg', 'New Yeezy 750 Boost signed by Kanye West. Size 13, comes in box, can provide receipt upon request.', 0),
@@ -206,7 +213,7 @@ function createListingDOM(listing) {
     listingElement.classList.add('col-lg-3');
     listingElement.classList.add('listing');
     listingElement.classList.add('rounded');
-    
+
     const title = document.createElement('div');
     title.classList.add('text-center');
 
@@ -342,9 +349,17 @@ function createReviewDOM(review) {
     return reviewElement;
 }
 
-
+let userToDisplay;
+console.log(location.hash)
+if (!location.hash)
 //randomizing for fun
-let randomUser = userArray[Math.floor(Math.random() * 3)];
-createProfileView(randomUser);
-displayUserListings(randomUser.userListings);
-displayUserReviews(randomUser.userReviews);
+    userToDisplay = userArray[Math.floor(Math.random() * 3)];
+else{
+    let urlHash = location.hash.substr(1);
+    userToDisplay = userMap[urlHash];
+}
+console.log(userToDisplay);
+//let randomUser = userArray[Math.floor(Math.random() * 3)];
+createProfileView(userToDisplay);
+displayUserListings(userToDisplay.userListings);
+displayUserReviews(userToDisplay.userReviews);
