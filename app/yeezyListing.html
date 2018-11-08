@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="yeezyListing.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="yeezyListing.js"></script>
 </head>
 <body class="bg-light">
     <!--Reusable navbar-->
@@ -21,7 +22,7 @@
               <div class="container ml-5 border border-dark pb-3">
                     <div class="d-flex flex-column">
                         <div class="p-2 align-self-center">
-                            <h2> YEEZY NEW SWAG </h2>
+                            <h2 id="itemTitle"> GENERIC TITLE! </h2>
                             <hr class="mt-0 bg-dark">
                         </div>
 
@@ -58,8 +59,8 @@
                     <div class="card-header">
                         <div class="profilePicContainer" id="itemProfileContainer"> 
                             <a class="profileLink text-primary" href="profile.html">
-                                <img class="profilePic" width="40" src="img/yeezy_pp.png">
-                                @siiiiiiiiilver_surffffeeeeer
+                                <img class="profilePic" id="listingProfilePic" width="40" src="img/yeezy_pp.png">
+                                <span id="profileText"> sicktextbro</span>
                             </a>
                         </div>
                     </div>
@@ -68,14 +69,14 @@
                                 <h1 id="priceTag">$1250</h5>
                         </div>
                         <div class="d-inline-block float-right">
-                                <h4 >date posted</h4>
+                                <h4 id="dateText">date posted</h4>
                         </div>
                     
-                        <p class="card-text" id="itemDescription">New Yeezy 750 Boost signed by Kanye West. Size 13, comes in box, can provide receipt upon request.</p>
+                        <p class="card-text" id="itemDescription">Generic desc</p>
                     </div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item" id="itemCondition"> Condition: 
-                            <span class="text-success">NEW</span>
+                            <span class="text-success" id="itemCondText">NEW</span>
                         </li>
                         <li class="list-group-item"> 
                             <a href="#" class="btn btn-primary">Make Offer</a>
