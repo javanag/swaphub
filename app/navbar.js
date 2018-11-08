@@ -75,14 +75,6 @@ const navItems = {
     },
 };
 
-// let loggedIn = true;
-// if (!location.hash)
-// //randomizing for fun
-//     loggedIn = false;
-// else {
-//     let userToDisplay = location.hash.substr(1);
-// }
-
 function createNavbar(siteView, loggedIn = true) {
     console.log("Making navbar...");
     const navContainer = document.createElement('nav');

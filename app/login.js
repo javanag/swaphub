@@ -14,6 +14,7 @@ function UserInfo(firstName, lastName, email, userName,
     this.profilePic = profilePic;
     this.userListings = [];
     this.userReviews = [];
+    this.isAdmin = false;
 }
 
 // UserInfo default functions:
@@ -57,6 +58,7 @@ const userArray = [
     new UserInfo('Mike', 'Litoris', 'cameltoe13@zee.com', 'gaspump2000', '1234321', 'lilpump_pp.jpg'),
     new UserInfo('Ben', 'Dover', 'nosoap69@nohomo.com', 'bobbyandnotor', '1234321', 'logic_pp.jpeg',),
 ];
+userArray[1].isAdmin = true;
 
 const userMap = {
     "laflame92cactus": userArray[0],
@@ -112,7 +114,11 @@ function makeLogin(e) {
         if (!userMap[usernameVal].isPasswordMatch(passwordVal)) {
             window.alert("Wrong password!");
         }
-        else
-            window.location.href = "profile.html#"+usernameVal;
+        else {
+            if (userMap[usernameVal].isAdmin)
+                window.location.href = "listing_admin.html#" + usernameVal;
+            else
+                window.location.href = "listing.html#" + usernameVal;
+        }
     }
 }

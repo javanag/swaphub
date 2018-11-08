@@ -124,7 +124,7 @@ for (let j = 0; j < 2; j++) {
 // end of dummy data
 
 //creates user's profile
-function createProfileView(userInfo) {
+function createProfileView(userInfo, isAdmin = false) {
     console.log("Displaying user info...");
     const profileElement = document.createElement('div');
     profileElement.className = "row";
@@ -208,6 +208,22 @@ function createProfileView(userInfo) {
     profileInfo.appendChild(editProfileBtn);
 
     editProfileBtn.addEventListener("click", editProfileMode);
+
+    if (isAdmin){
+        const deleteProfileBtn = document.createElement("button");
+        deleteProfileBtn.className = 'btn btn-danger btn-block mt-3';
+        deleteProfileBtn.id = "deleteProfileButton";
+        deleteProfileBtn.setAttribute("type", "button");
+        deleteProfileBtn.innerText = "Delete Profile";
+        profileInfo.appendChild(deleteProfileBtn);
+
+        deleteProfileBtn.addEventListener("click", function () {
+            console.log("Deleting profile....")
+            deleteProfileBtn.blur();
+            window.alert("Profile have been deleted!")
+            userInfoContainer.parentElement.removeChild(userInfoContainer);
+        });
+    }
 
     //Enter profile edit mode
     function editProfileMode() {
@@ -426,8 +442,6 @@ function createReviewDOM(review) {
     profileLink.appendChild(document.createTextNode(review.writer.userName));
     profileInfo.appendChild(profileLink);
     reviewElement.appendChild(profileInfo);
-
-    // const reviewedItem = document.createElement('div');
 
     const title = document.createElement('div');
     title.classList.add('text-center');
