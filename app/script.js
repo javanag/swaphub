@@ -6,6 +6,12 @@ const categoryDropDown = document.querySelector('#categoryDropDown');
 const searchBar = document.querySelector('#searchBar');
 const searchSubmit = document.querySelector('#searchSubmit');
 
+let adminMode = false;
+
+function setAdminMode(mode){
+    adminMode = mode;
+}
+
 const allListings = [];
 
 const Listing = function (username, profilePicture, title, date, price, condition, category, thumbnail, description, likes) {
@@ -25,13 +31,13 @@ document.addEventListener('DOMContentLoaded', function () {
     //This loading of recent listings will be drawn from the server in the future.
     //So pretend allListings is the server I suppose.
     allListings.push(new Listing('laflame92cactus', 'travis_pp.jpg', 'Adidas Yeezy 750 Boost', 'Oct 31, 2018', '2560.56', 'NEW', 'Fashion', 'yeezy750feet.jpg', 'New Yeezy 750 Boost signed by Kanye West. Size 13, comes in box, can provide receipt upon request.', 0));
-    allListings.push(new Listing('gaspump2000', 'lilpump_pp.jpg', '(Very Rare) Basketball', 'Oct 27, 2018', '1000000', 'USED', 'Sports', 'basketball.jpeg', 'Ultra rare basketball used and signed by DROSE himself (not pictured). Willing to exchange for another Iced Out Rolex.', 0));
-    allListings.push(new Listing('bobbyandnotor', 'logic_pp.jpeg', 'Minecraft PS3 Edition', 'Oct 15, 2018', '12', 'DAMAGED', 'Games', 'minecraft.jpg', 'Minecraft PS3 edition in case. Mild scratches on disk but fully functional.', 0));
-    allListings.push(new Listing('bobbyandnotor', 'logic_pp.jpeg', 'Vintage Crime and Punishment', 'Oct 25, 2018', '40', 'USED', 'Books', 'dosto.png', 'My grandma gave me this ultra rare masterpiece.', 0));
-    allListings.push(new Listing('laflame92cactus', 'travis_pp.jpg', '[SALE] My Mixtape', 'Oct 24, 2018', '10', 'NEW', 'Music', 'astroworld.jpg', 'Please everybody buy my tape I swear it\'s fire.', 0));
-    allListings.push(new Listing('gaspump2000', 'lilpump_pp.jpg', 'BEST Aloe Plant', 'Oct 15, 2018', '5', 'USED', 'Plants & Animals', 'aloe.jpg', 'I usually only grow other types of plants, I\'ll let this go cheap.', 0));
-    allListings.push(new Listing('bobbyandnotor', 'logic_pp.jpeg', '(Almost) New Ferrari!', 'Oct 10, 2018', '97000', 'USED', 'Vehicles', 'whip.jpeg', 'This is the fastest on the track hands down!', 0));
-    allListings.push(new Listing('laflame92cactus', 'travis_pp.jpg', 'Broken Sunbeam Toaster', 'Sep 29, 2018', '2', 'DAMAGED', 'Furniture & Appliance', 'toaster.jpeg', 'For parts (bread not included, stop asking)', 0));
+    //allListings.push(new Listing('gaspump2000', 'lilpump_pp.jpg', '(Very Rare) Basketball', 'Oct 27, 2018', '1000000', 'USED', 'Sports', 'basketball.jpeg', 'Ultra rare basketball used and signed by DROSE himself (not pictured). Willing to exchange for another Iced Out Rolex.', 0));
+    //allListings.push(new Listing('bobbyandnotor', 'logic_pp.jpeg', 'Minecraft PS3 Edition', 'Oct 15, 2018', '12', 'DAMAGED', 'Games', 'minecraft.jpg', 'Minecraft PS3 edition in case. Mild scratches on disk but fully functional.', 0));
+    //allListings.push(new Listing('bobbyandnotor', 'logic_pp.jpeg', 'Vintage Crime and Punishment', 'Oct 25, 2018', '40', 'USED', 'Books', 'dosto.png', 'My grandma gave me this ultra rare masterpiece.', 0));
+    //allListings.push(new Listing('laflame92cactus', 'travis_pp.jpg', '[SALE] My Mixtape', 'Oct 24, 2018', '10', 'NEW', 'Music', 'astroworld.jpg', 'Please everybody buy my tape I swear it\'s fire.', 0));
+    //allListings.push(new Listing('gaspump2000', 'lilpump_pp.jpg', 'BEST Aloe Plant', 'Oct 15, 2018', '5', 'USED', 'Plants & Animals', 'aloe.jpg', 'I usually only grow other types of plants, I\'ll let this go cheap.', 0));
+    //allListings.push(new Listing('bobbyandnotor', 'logic_pp.jpeg', '(Almost) New Ferrari!', 'Oct 10, 2018', '97000', 'USED', 'Vehicles', 'whip.jpeg', 'This is the fastest on the track hands down!', 0));
+    //allListings.push(new Listing('laflame92cactus', 'travis_pp.jpg', 'Broken Sunbeam Toaster', 'Sep 29, 2018', '2', 'DAMAGED', 'Furniture & Appliance', 'toaster.jpeg', 'For parts (bread not included, stop asking)', 0));
     //Render recent listings pulled from server;
     displayAllListings();
 });
@@ -137,7 +143,11 @@ function createListingDOM(listing) {
 
     const profileLink = document.createElement('a');
     listingElement.classList.add('profileLink');
-    profileLink.setAttribute('href', 'profile.html#'+listing.username);//TODO:
+    if(adminMode){
+        profileLink.setAttribute('href', 'profile_admin.html#'+listing.username);//TODO:
+    }else{
+        profileLink.setAttribute('href', 'profile.html#'+listing.username);//TODO:
+    }
     profileLink.appendChild(document.createTextNode(listing.username));
 
     const date = document.createElement('div');
@@ -152,7 +162,11 @@ function createListingDOM(listing) {
     title.classList.add('text-center');
 
     const titleLink = document.createElement('a');
-    titleLink.setAttribute('href', 'yeezyListing.html');//TODO:
+    if(adminMode){
+        titleLink.setAttribute('href', 'yeezyListing_admin.html');//TODO:
+    }else{
+        titleLink.setAttribute('href', 'yeezyListing.html');//TODO:
+    }
     titleLink.classList.add('listingTitleLink');
 
     const titleLinkH5 = document.createElement('h5');
@@ -216,7 +230,28 @@ function createListingDOM(listing) {
     description.appendChild(document.createTextNode(listing.description));
 
     listingElement.appendChild(description);
+
+    const deleteButton = document.createElement('button');
+    deleteButton.className = "btn btn-outline-danger w-100";
+    deleteButton.innerText = "Delete";
+    deleteButton.addEventListener("click", deleteListing);
+
+    if(adminMode){
+        listingElement.appendChild(deleteButton);
+    }
+
     return listingElement;
+}
+
+function deleteListing(e){
+    const listing = e.target.parentNode;
+    for(let i = 0; i < allListings.length; i++){
+        if(allListings[i].title == listing.querySelector('h5').textContent){
+            allListings.splice(i);
+            break;
+        }
+    }
+    listingsContainer.removeChild(e.target.parentNode);
 }
 
 function pushListingBreadCrumb(navigationText, resultCount) {

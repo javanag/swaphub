@@ -116,9 +116,9 @@ function makeLogin(e) {
         }
         else {
             if (userMap[usernameVal].isAdmin)
-                window.location.href = "listing_admin.html#" + usernameVal;
+                window.location.href = "listings_admin.html#" + usernameVal;
             else
-                window.location.href = "listing.html#" + usernameVal;
+                window.location.href = "listings.html#" + usernameVal;
         }
     }
 }

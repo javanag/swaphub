@@ -1,5 +1,12 @@
 'use strict';
 
+let currentUserName = '';
+let currentUserImage = '';
+
+function setupNavbarUser(userName, userImage){
+    currentUserName = userName;
+    currentUserImage = userImage;
+}
 
 const navItems = {
     "listings": function (ulContainer) {
@@ -20,7 +27,11 @@ const navItems = {
         itemsArray[0].firstChild.innerText = "Listings";
         itemsArray[0].firstChild.appendChild(currView);
         itemsArray[0].setAttribute("id", "listingNavLink");
-        itemsArray[0].firstChild.setAttribute("href", "listings.html");
+        if(currentUserName == 'gaspump2000'){
+            itemsArray[0].firstChild.setAttribute("href", "listings_admin.html");
+        }else{
+            itemsArray[0].firstChild.setAttribute("href", "listings.html");
+        }
         // Categories
         itemsArray[1].className += " dropdown";
         itemsArray[1].firstChild.className += " dropdown-toggle";
@@ -67,7 +78,11 @@ const navItems = {
         // Listings
         itemsArray[0].firstChild.innerText = "Listings";
         itemsArray[0].setAttribute("id", "listingNavLink");
-        itemsArray[0].firstChild.setAttribute("href", "listings.html");
+        if(currentUserName == 'gaspump2000'){
+            itemsArray[0].firstChild.setAttribute("href", "listings_admin.html");
+        }else{
+            itemsArray[0].firstChild.setAttribute("href", "listings.html");
+        }
         // Sell
         itemsArray[1].firstChild.innerText = "Sell";
         // About
@@ -131,14 +146,18 @@ function createNavbar(siteView, loggedIn = true) {
         profilePicContainer.className = "profilePicContainer";
         const profilePic = document.createElement("a");
         profilePic.className = "profileLink text-light";
-        profilePic.setAttribute("href", "profile.html");
+        if(currentUserName == 'gaspump2000'){
+            profilePic.setAttribute("href", "profile_admin.html#" + currentUserName);
+        }else{
+            profilePic.setAttribute("href", "profile.html#" + currentUserName);
+        }
         profilePicContainer.appendChild(profilePic);
         const profileImg = document.createElement('img');
         profileImg.className = "profilePic";
         profileImg.setAttribute("width", "40");
-        profileImg.setAttribute("src", "img/yeezy_pp.png");
+        profileImg.setAttribute("src", "img/" +  currentUserImage);
         profilePic.appendChild(profileImg);//todo: load from user object
-        profilePic.appendChild(document.createTextNode("@siiiiiiiiilver_surffffeeeeer"));
+        profilePic.appendChild(document.createTextNode("@" + currentUserName));
         endContainer.appendChild(profilePicContainer);
     }
     else{

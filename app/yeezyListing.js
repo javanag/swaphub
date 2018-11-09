@@ -5,15 +5,15 @@
 // const categoryDropDown = document.querySelector('#categoryDropDown');
 // const searchBar = document.querySelector('#searchBar');
 // const searchSubmit = document.querySelector('#searchSubmit');
-var currentListing;
-var usernameDOM;
-var priceDOM;
-var dateDOM;
-var titleDOM;
-var descDOM;
-var ppDOM;
-var ppTextDOM;
-var conditionDOM;
+let currentListing;
+let usernameDOM;
+let priceDOM;
+let dateDOM;
+let titleDOM;
+let descDOM;
+let ppDOM;
+let ppTextDOM;
+let conditionDOM;
 
 const Listing = function (username, profilePicture, title, date, price, condition, category, thumbnail, description, likes) {
     this.username = username;
