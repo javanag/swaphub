@@ -1,6 +1,7 @@
 'use strict';
 
 const userInfoContainer = document.querySelector('#userInfoContainer');
+let admin = false;
 
 //Review Object
 function Review(writerUser, subjectUser, subjectListing, overallRating, text) {
@@ -124,7 +125,7 @@ for (let j = 0; j < 2; j++) {
 // end of dummy data
 
 //creates user's profile
-function createProfileView(userInfo, isAdmin = false) {
+function createProfileView(userInfo, isAdmin) {
     console.log("Displaying user info...");
     const profileElement = document.createElement('div');
     profileElement.className = "row";
@@ -209,7 +210,7 @@ function createProfileView(userInfo, isAdmin = false) {
 
     editProfileBtn.addEventListener("click", editProfileMode);
 
-    if (isAdmin){
+    if (admin){
         const deleteProfileBtn = document.createElement("button");
         deleteProfileBtn.className = 'btn btn-danger btn-block mt-3';
         deleteProfileBtn.id = "deleteProfileButton";
@@ -293,7 +294,7 @@ function createProfileView(userInfo, isAdmin = false) {
 
         // profileInfo.replaceChild(editProfileBtn, submitButton);
         userInfoContainer.removeChild(profileElement);
-        createProfileView(userToDisplay)
+        createProfileView(userToDisplay, );
     }
 }
 
