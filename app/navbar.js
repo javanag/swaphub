@@ -159,6 +159,14 @@ function createNavbar(siteView, loggedIn = true) {
         profilePic.appendChild(profileImg);//todo: load from user object
         profilePic.appendChild(document.createTextNode("@" + currentUserName));
         endContainer.appendChild(profilePicContainer);
+
+        const logoutButton = document.createElement('a');
+        logoutButton.className = "btn btn-outline-danger my-2 my-sm-0 ml-3";
+        logoutButton.setAttribute("role", "button");
+        logoutButton.setAttribute("href", "login.html");
+        logoutButton.setAttribute("id", "logoutButton");
+        logoutButton.innerText = "Logout";
+        endContainer.appendChild(logoutButton);
     }
     else{
         const loginButton = document.createElement('a');
