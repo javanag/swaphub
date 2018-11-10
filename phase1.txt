@@ -1,3 +1,11 @@
 # team52 phase1.txt
 
-we intend to hand this in late!
+we intend to hand this in late! (as approved with Mark)
+
+Login credentials:
+    Admin - username: gaspump2000
+            password: 1234321
+
+    User - username: laflame92cactus
+           password: 1234321
+   
