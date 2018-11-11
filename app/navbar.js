@@ -1,5 +1,6 @@
 'use strict';
 
+//The current user session will be kept track of on the server
 let currentUserName = '';
 let currentUserImage = '';
 
@@ -60,6 +61,11 @@ const navItems = {
         itemsArray[1].appendChild(dropdownContainer);
         // Sell
         itemsArray[2].firstChild.innerText = "Sell";
+        if(currentUserName == 'gaspump2000'){
+            itemsArray[2].firstChild.setAttribute("href", "add_listing_admin.html");
+        }else{
+            itemsArray[2].firstChild.setAttribute("href", "add_listing.html");
+        }
         // About
         itemsArray[3].firstChild.innerText = "About";
     },
@@ -85,6 +91,11 @@ const navItems = {
         }
         // Sell
         itemsArray[1].firstChild.innerText = "Sell";
+        if(currentUserName == 'gaspump2000'){
+            itemsArray[1].firstChild.setAttribute("href", "add_listing_admin.html");
+        }else{
+            itemsArray[1].firstChild.setAttribute("href", "add_listing.html");
+        }
         // About
         itemsArray[2].firstChild.innerText = "About";
     },

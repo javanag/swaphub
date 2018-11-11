@@ -1,5 +1,5 @@
 'use strict';
-
+let admin = false;
 
 //Review Object
 function Review(writerUser, subjectUser, subjectListing, overallRating, text) {
@@ -75,7 +75,7 @@ const Listing = function (username, profilePicture, title, date, price, conditio
 };
 
 
-//dummy data
+//dummy data, which represents the user database on the server.
 const userArray = [
     new UserInfo('Chris P.', 'Bacon', 'smokyChris@yomamail.com', 'laflame92cactus', '1234321', 'travis_pp.jpg',),
     new UserInfo('Mike', 'Litoris', 'cameltoe13@zee.com', 'gaspump2000', '1234321', 'lilpump_pp.jpg'),
@@ -89,6 +89,7 @@ const userMap = {
     "bobbyandnotor": userArray[2]
 };
 
+//represents the database of listings on the server
 const allListings = [
     new Listing('laflame92cactus', 'travis_pp.jpg', 'Adidas Yeezy 750 Boost', 'Oct 31, 2018', '2560.56', 'NEW', 'Fashion', 'yeezy750feet.jpg', 'New Yeezy 750 Boost signed by Kanye West. Size 13, comes in box, can provide receipt upon request.', 0),
     //new Listing('gaspump2000', 'lilpump_pp.jpg', '(Very Rare) Basketball', 'Oct 27, 2018', '1000000', 'USED', 'Sports', 'basketball.jpeg', 'Ultra rare basketball used and signed by DROSE himself (not pictured). Willing to exchange for another Iced Out Rolex.', 0),
@@ -210,10 +211,37 @@ function displayAddDOM(username) {
 
 function addItem(e) {
     e.preventDefault();
-
+    /*
     const myForm = document.forms["addForm"].elements;
     for (let i = 0; i < myForm.length; i++){
         if (myForm[i].value == "")
             alert("All fields required!");
-    }W
+    }
+    */
+    const myForm = document.forms["addForm"];
+    const fields = myForm.querySelectorAll('input');
+    const textArea = myForm.querySelector('textarea');
+    let filled = true;
+    if (textArea.value == ""){
+            alert("All fields required!");
+            filled = false;
+    }else{
+        for (let i = 0; i < fields.length; i++){
+            if (fields[i].value == ""){
+                alert("All fields required!");
+                filled = false;
+                break;
+            }
+        }
+    }
+    if(filled){
+        alert("Successfully added new listing.");
+        //At this point the client will send the info for the new listing
+        //to the server, and when redirected to listings.html they should see it.
+        if(admin){
+            window.location.href = "listings_admin.html";
+        }else{
+            window.location.href = "listings.html";
+        }
+    }
 }

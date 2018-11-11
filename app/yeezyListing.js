@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
     //This loading of recent listings will be drawn from the server in the future.
     //So pretend allListings is the server I suppose.
     currentListing = (new Listing('laflame92cactus', 'travis_pp.jpg', 'Adidas Yeezy 750 Boost', 'Oct 31, 2018', '2560.56', 'NEW', 'Fashion', 'yeezy750feet.jpg', 'New Yeezy 750 Boost signed by Kanye West. Size 13, comes in box, can provide receipt upon request.', 0));
+    //Following just a UI placeholder listing for deleting items
     deletedListing = (new Listing('DELETED', 'travis_pp.jpg', 'DELETED', 'Oct 31, 2018', '0', 'DELETED', 'DELETED', 'yeezy750feet.jpg', 'THIS ITEM HAS BEEN DELETED', 0));
     //Render recent listings pulled from server;
     ppDOM = document.querySelector('#listingProfilePic');
@@ -79,6 +80,10 @@ function setItemDescriptionDOM() {
 }
 
 function deleteListing(){
+    //In this function the client should tell the server which listing
+    //to delete from the server side listings database, only when the 
+    //user has the correct credentials: eg when admin, or the user who
+    //oriinally posted the listing.
     const oldTitle = currentListing.title;
     currentListing = deletedListing;
     setItemDescriptionDOM();

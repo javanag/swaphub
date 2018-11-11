@@ -53,6 +53,7 @@ UserInfo.prototype.isPasswordMatch =
 // end of UserInfo default functions.
 
 //dummy data
+//Represents the user database on the server
 const userArray = [
     new UserInfo('Chris P.', 'Bacon', 'smokyChris@yomamail.com', 'laflame92cactus', '1234321', 'travis_pp.jpg',),
     new UserInfo('Mike', 'Litoris', 'cameltoe13@zee.com', 'gaspump2000', '1234321', 'lilpump_pp.jpg'),
@@ -106,6 +107,7 @@ function makeLogin(e) {
     e.preventDefault();
     console.log("Logging in...");
 
+    //The following login an password verification will be done on the server
     const usernameVal = document.querySelector('#usernameInput').value;
     const passwordVal = document.querySelector('#passwordInput').value;
     if (!(usernameVal in userMap))

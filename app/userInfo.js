@@ -78,6 +78,7 @@ const Listing = function (username, profilePicture, title, date, price, conditio
 
 
 //dummy data
+//user database on the server
 const userArray = [
     new UserInfo('Chris P.', 'Bacon', 'smokyChris@yomamail.com', 'laflame92cactus', '1234321', 'travis_pp.jpg',),
     new UserInfo('Mike', 'Litoris', 'cameltoe13@zee.com', 'gaspump2000', '1234321', 'lilpump_pp.jpg'),
@@ -91,6 +92,7 @@ const userMap = {
     "bobbyandnotor": userArray[2]
 };
 
+//represents listings database on the server
 const allListings = [
     new Listing('laflame92cactus', 'travis_pp.jpg', 'Adidas Yeezy 750 Boost', 'Oct 31, 2018', '2560.56', 'NEW', 'Fashion', 'yeezy750feet.jpg', 'New Yeezy 750 Boost signed by Kanye West. Size 13, comes in box, can provide receipt upon request.', 0),
     //new Listing('gaspump2000', 'lilpump_pp.jpg', '(Very Rare) Basketball', 'Oct 27, 2018', '1000000', 'USED', 'Sports', 'basketball.jpeg', 'Ultra rare basketball used and signed by DROSE himself (not pictured). Willing to exchange for another Iced Out Rolex.', 0),
@@ -329,7 +331,11 @@ function createListingDOM(listing) {
     title.classList.add('text-center');
 
     const titleLink = document.createElement('a');
-    titleLink.setAttribute('href', '#');//TODO:
+    if(admin){
+        titleLink.setAttribute('href', 'yeezyListing_admin.html');//TODO:
+    }else{
+        titleLink.setAttribute('href', 'yeezyListing.html');//TODO:
+    }
     titleLink.classList.add('listingTitleLink');
 
     const titleLinkH5 = document.createElement('h5');
@@ -362,7 +368,11 @@ function createListingDOM(listing) {
     category.appendChild(document.createTextNode('in '));
     const categoryLink = document.createElement('a');
     categoryLink.appendChild(document.createTextNode(listing.category));
-    categoryLink.setAttribute('href', '#');//TODO:
+    if(admin){
+        categoryLink.setAttribute('href', 'listings_admin.html');//TODO:
+    }else{
+        categoryLink.setAttribute('href', 'listings.html');//TODO:
+    }
     category.appendChild(categoryLink);
 
     detailsUl.appendChild(price);
@@ -382,7 +392,11 @@ function createListingDOM(listing) {
     image.setAttribute('src', 'img/' + listing.thumbnail);
 
     const imageLinkToListing = document.createElement('a');
-    imageLinkToListing.setAttribute('href', '#');//TODO:
+    if(admin){
+        imageLinkToListing.setAttribute('href', 'yeezyListing_admin.html');//TODO:
+    }else{
+        imageLinkToListing.setAttribute('href', 'yeezyListing.html');//TODO:
+    }
     imageLinkToListing.appendChild(image);
 
     imageContainer.appendChild(imageLinkToListing);
@@ -448,7 +462,11 @@ function createReviewDOM(review) {
     title.classList.add('text-center');
 
     const titleLink = document.createElement('a');
-    titleLink.setAttribute('href', '#');//TODO:
+    if(admin){
+        titleLink.setAttribute('href', 'yeezyListing_admin.html');
+    }else{
+        titleLink.setAttribute('href', 'yeezyListing.html');
+    }
     titleLink.classList.add('listingTitleLink');
 
     const titleLinkH5 = document.createElement('h5');

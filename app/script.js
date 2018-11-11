@@ -12,6 +12,8 @@ function setAdminMode(mode){
     adminMode = mode;
 }
 
+//Represents the database of all listings on the server
+//Pared down for simplicity
 const allListings = [];
 
 const Listing = function (username, profilePicture, title, date, price, condition, category, thumbnail, description, likes) {
@@ -71,6 +73,8 @@ searchSubmit.addEventListener('click', function () {
 
 categoryDropDown.addEventListener('click', filterListingsByCategory);
 
+//This will behave like a select where statement from the server side
+//listing database
 function filterListingsByCategory(e) {
     const allCategories = categoryDropDown.querySelectorAll('.dropdown-item');
     const trigger = e.target;
