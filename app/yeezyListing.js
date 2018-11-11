@@ -14,6 +14,11 @@ let descDOM;
 let ppDOM;
 let ppTextDOM;
 let conditionDOM;
+let listingInfo;
+let deletedListing;
+
+
+let admin = false;
 
 const Listing = function (username, profilePicture, title, date, price, condition, category, thumbnail, description, likes) {
     this.username = username;
@@ -32,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
     //This loading of recent listings will be drawn from the server in the future.
     //So pretend allListings is the server I suppose.
     currentListing = (new Listing('laflame92cactus', 'travis_pp.jpg', 'Adidas Yeezy 750 Boost', 'Oct 31, 2018', '2560.56', 'NEW', 'Fashion', 'yeezy750feet.jpg', 'New Yeezy 750 Boost signed by Kanye West. Size 13, comes in box, can provide receipt upon request.', 0));
+    deletedListing = (new Listing('DELETED', 'travis_pp.jpg', 'DELETED', 'Oct 31, 2018', '0', 'DELETED', 'DELETED', 'yeezy750feet.jpg', 'THIS ITEM HAS BEEN DELETED', 0));
     //Render recent listings pulled from server;
     ppDOM = document.querySelector('#listingProfilePic');
     priceDOM = document.querySelector('#priceTag');
@@ -40,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
     descDOM = document.querySelector('#itemDescription');
     ppTextDOM = document.querySelector('#profileText');
     conditionDOM = document.querySelector('#itemCondText');
+    listingInfo = document.querySelector('#listingInfo');
 
     setItemDescriptionDOM();
 });
@@ -60,8 +67,24 @@ function setItemDescriptionDOM() {
     dateDOM.innerText = currentListing.date
     descDOM.innerText = currentListing.description
     titleDOM.innerText = currentListing.title
+
+    if(admin){
+        const deleteButton = document.createElement('button');
+        deleteButton.className = "btn btn-outline-danger w-100";
+        deleteButton.innerText = "Delete";
+        deleteButton.addEventListener("click", deleteListing);
+        listingInfo.appendChild(deleteButton);
+    }
     setCondition()
-}   
+}
+
+function deleteListing(){
+    const oldTitle = currentListing.title;
+    currentListing = deletedListing;
+    setItemDescriptionDOM();
+    window.alert("Listing: " + oldTitle + " has been deleted.");
+    window.location.href = "listings_admin.html";
+}
 
 function setCondition(){
     if (currentListing.condition == 'NEW') {
