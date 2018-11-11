@@ -3,6 +3,7 @@
 //The current user session will be kept track of on the server
 let currentUserName = '';
 let currentUserImage = '';
+let index = false;
 
 function setupNavbarUser(userName, userImage){
     currentUserName = userName;
@@ -98,6 +99,11 @@ const navItems = {
         }
         // About
         itemsArray[2].firstChild.innerText = "About";
+        if(index){
+        	itemsArray[0].firstChild.setAttribute("href", "#");
+        	itemsArray[1].firstChild.setAttribute("href", "#");
+        	itemsArray[2].firstChild.setAttribute("href", "#");
+        }
     },
 };
 
