@@ -18,7 +18,7 @@ const { User } = require('./models/user')
 
 // express
 const app = express();
-app.use(express.static(__dirname + '/public'));
+// app.use(express.static(__dirname + '/public'));
 // body-parser middleware setup.  Will parse the JSON and convert to object
 app.use(bodyParser.json());
 // parse incoming parameters to req.body
@@ -44,6 +44,7 @@ const sessionChecker = (req, res, next) => {
 		next()
 	}
 }
+app.use('/public', express.static(__dirname + '/public'));
 
 // route for the root: redirect to the login page
 app.get('/', sessionChecker, (req, res) => {

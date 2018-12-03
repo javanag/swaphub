@@ -85,9 +85,11 @@ html {
     height: 50px;
     line-height: 50px;
 }
+
 .login-form .form-group {
     margin-bottom: 10px;
 }
+
 .login-form {
     text-align: center;
     background: #ffffff none repeat scroll 0 0;
@@ -118,4 +120,5 @@ html {
     text-align: left;
     margin-bottom: 30px;
 }
+
 /*end of login style*/
