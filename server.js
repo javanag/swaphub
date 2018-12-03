@@ -51,14 +51,14 @@ app.get('/', sessionChecker, (req, res) => {
 
 // route for user login page
 app.get('/login', sessionChecker, (req, res) => {
-	res.sendFile(__dirname + '/public/login.html')
+	res.sendFile(__dirname + '/app/index.html')
 })
 
 
 app.get('/dashboard', (req, res) => {
 	// check if we have an active session
 	if (req.session.user) {
-		res.sendFile(__dirname + '/public/dashboard.html')
+		res.sendFile(__dirname + '/app/listings.html')
 	} else {
 		res.redirect('/login')
 	}
