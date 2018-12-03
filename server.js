@@ -18,6 +18,7 @@ const { User } = require('./models/user')
 
 // express
 const app = express();
+app.use(express.static(__dirname + '/public'));
 // body-parser middleware setup.  Will parse the JSON and convert to object
 app.use(bodyParser.json());
 // parse incoming parameters to req.body
