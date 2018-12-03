@@ -5,29 +5,29 @@ const bcrypt = require('bcryptjs')
 
 // We'll make this model in a different way
 const UserSchema = new mongoose.Schema({
-	email: {
+	username: {
 		type: String,
 		required: true,
-		minlength: 1,
+		minlength: 3,
 		trim: true, // trim whitespace
-		unique: true,
-		validate: {
-			validator: validator.isEmail,
-			message: 'Not valid email'
-		}
+		unique: true
 	},
 	password: {
 		type: String,
 		required: true,
 		minlength: 6
+	},
+	isAdmin: {
+		type: Boolean,
+		default: false
 	}
 })
 
 // created our own find method
-UserSchema.statics.findByEmailPassword = function(email, password) {
+UserSchema.statics.findByUserPassword = function(username, password) {
 	const User = this
 
-	return User.findOne({email: email}).then((user) => {
+	return User.findOne({username: username}).then((user) => {
 		if (!user) {
 			return Promise.reject()
 		}

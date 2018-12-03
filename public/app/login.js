@@ -70,7 +70,9 @@ const userMap = {
 function displayLoginDOM() {
     const loginForm = document.createElement("form");
     loginForm.id = "login";
-    loginForm.addEventListener("submit", makeLogin);
+    loginForm.setAttribute("method", "post");
+    loginForm.setAttribute("action","/users/login");
+    loginForm.addEventListener("submit", loginForm.submit);
 
     const usernameInputContainer = document.createElement("div");
     usernameInputContainer.className = "form-group";
@@ -78,6 +80,7 @@ function displayLoginDOM() {
 
     const usernameInput = document.createElement("input");
     usernameInput.id = "usernameInput";
+    usernameInput.setAttribute("name", "username");
     usernameInput.className = "form-control";
     usernameInput.setAttribute("type", "text");
     usernameInput.setAttribute("placeholder", "Username");
@@ -89,6 +92,7 @@ function displayLoginDOM() {
 
     const passwordInput = document.createElement("input");
     passwordInput.id = "passwordInput";
+    passwordInput.setAttribute("name", "password");
     passwordInput.className = "form-control";
     passwordInput.setAttribute("type", "password");
     passwordInput.setAttribute("placeholder", "Password");

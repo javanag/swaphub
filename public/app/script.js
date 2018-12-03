@@ -135,7 +135,7 @@ function createListingDOM(listing) {
 
     const profilePicture = document.createElement('img');
     profilePicture.setAttribute('width', '32');
-    profilePicture.setAttribute('src', 'img/' + listing.profilePicture);
+    profilePicture.setAttribute('src', '/public/app/img/' + listing.profilePicture);
     profilePicture.classList.add('profilePic');
 
     profilePictureContainer.appendChild(profilePicture);
@@ -167,9 +167,9 @@ function createListingDOM(listing) {
 
     const titleLink = document.createElement('a');
     if(adminMode){
-        titleLink.setAttribute('href', 'yeezyListing_admin.html');//TODO:
+        titleLink.setAttribute('href', '/public/app/yeezyListing_admin.html');//TODO:
     }else{
-        titleLink.setAttribute('href', 'yeezyListing.html');//TODO:
+        titleLink.setAttribute('href', '/public/app/yeezyListing.html');//TODO:
     }
     titleLink.classList.add('listingTitleLink');
 
@@ -220,7 +220,7 @@ function createListingDOM(listing) {
 
     const image = document.createElement('img');
     image.classList.add('listingImage');
-    image.setAttribute('src', 'img/' + listing.thumbnail);
+    image.setAttribute('src', '/public/app/img/' + listing.thumbnail);
 
     const imageLinkToListing = document.createElement('a');
     imageLinkToListing.setAttribute('href', '#');//TODO:

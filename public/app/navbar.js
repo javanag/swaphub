@@ -30,9 +30,9 @@ const navItems = {
         itemsArray[0].firstChild.appendChild(currView);
         itemsArray[0].setAttribute("id", "listingNavLink");
         if(currentUserName == 'gaspump2000'){
-            itemsArray[0].firstChild.setAttribute("href", "listings_admin.html");
+            itemsArray[0].firstChild.setAttribute("href", "/public/app/listings_admin.html");
         }else{
-            itemsArray[0].firstChild.setAttribute("href", "listings.html");
+            itemsArray[0].firstChild.setAttribute("href", "/public/app/listings.html");
         }
         // Categories
         itemsArray[1].className += " dropdown";
@@ -63,9 +63,9 @@ const navItems = {
         // Sell
         itemsArray[2].firstChild.innerText = "Sell";
         if(currentUserName == 'gaspump2000'){
-            itemsArray[2].firstChild.setAttribute("href", "add_listing_admin.html");
+            itemsArray[2].firstChild.setAttribute("href", "/public/app/add_listing_admin.html");
         }else{
-            itemsArray[2].firstChild.setAttribute("href", "add_listing.html");
+            itemsArray[2].firstChild.setAttribute("href", "/public/app/add_listing.html");
         }
         // About
         itemsArray[3].firstChild.innerText = "About";
@@ -86,16 +86,16 @@ const navItems = {
         itemsArray[0].firstChild.innerText = "Listings";
         itemsArray[0].setAttribute("id", "listingNavLink");
         if(currentUserName == 'gaspump2000'){
-            itemsArray[0].firstChild.setAttribute("href", "listings_admin.html");
+            itemsArray[0].firstChild.setAttribute("href", "/public/app/listings_admin.html");
         }else{
-            itemsArray[0].firstChild.setAttribute("href", "listings.html");
+            itemsArray[0].firstChild.setAttribute("href", "/public/app/listings.html");
         }
         // Sell
         itemsArray[1].firstChild.innerText = "Sell";
         if(currentUserName == 'gaspump2000'){
-            itemsArray[1].firstChild.setAttribute("href", "add_listing_admin.html");
+            itemsArray[1].firstChild.setAttribute("href", "/public/app/add_listing_admin.html");
         }else{
-            itemsArray[1].firstChild.setAttribute("href", "add_listing.html");
+            itemsArray[1].firstChild.setAttribute("href", "/public/app/add_listing.html");
         }
         // About
         itemsArray[2].firstChild.innerText = "About";
@@ -164,15 +164,15 @@ function createNavbar(siteView, loggedIn = true) {
         const profilePic = document.createElement("a");
         profilePic.className = "profileLink text-light";
         if(currentUserName == 'gaspump2000'){
-            profilePic.setAttribute("href", "profile_admin.html#" + currentUserName);
+            profilePic.setAttribute("href", "/public/app/profile_admin.html#" + currentUserName);
         }else{
-            profilePic.setAttribute("href", "profile.html#" + currentUserName);
+            profilePic.setAttribute("href", "/public/app/profile.html#" + currentUserName);
         }
         profilePicContainer.appendChild(profilePic);
         const profileImg = document.createElement('img');
         profileImg.className = "profilePic";
         profileImg.setAttribute("width", "40");
-        profileImg.setAttribute("src", "img/" +  currentUserImage);
+        profileImg.setAttribute("src", "/public/app/img/" +  currentUserImage);
         profilePic.appendChild(profileImg);//todo: load from user object
         profilePic.appendChild(document.createTextNode("@" + currentUserName));
         endContainer.appendChild(profilePicContainer);
@@ -189,7 +189,7 @@ function createNavbar(siteView, loggedIn = true) {
         const loginButton = document.createElement('a');
         loginButton.className = "btn btn-warning my-2 my-sm-0 ml-3";
         loginButton.setAttribute("role", "button");
-        loginButton.setAttribute("href", "index.html");
+        loginButton.setAttribute("href", "/public/app/index.html");
         loginButton.setAttribute("id", "loginButton");
         loginButton.innerText = "Login";
         endContainer.appendChild(loginButton);
