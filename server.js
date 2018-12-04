@@ -13,6 +13,7 @@ const {mongoose} = require('./db/mongoose');
 
 // Import the models
 const {User} = require('./models/user')
+const {Listing} = require('./models/listing')
 
 
 // express
@@ -125,6 +126,30 @@ app.post('/users', (req, res) => {
 
 })
 
+// Create new listing:
+app.post('/listings', (req, res) => {
+
+    // Create a new listing
+    const listing = new Listing({
+        username: req.body.username,
+        title: req.body.title,
+        date: Date.now(),
+        price: req.body.price,
+        condition: req.body.condition,
+        category: req.body.category,
+        thumbnail: req.body.thumbnail,
+        description: req.body.description,
+        likes: 0
+    })
+
+    // save user to database
+    listing.save().then((result) => {
+        res.send(listing)
+    }, (error) => {
+        res.status(400).send(error) // 400 for bad request
+    })
+
+})
 
 app.listen(port, () => {
     log(`Listening on port ${port}...`)
