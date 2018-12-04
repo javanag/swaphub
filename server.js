@@ -118,7 +118,7 @@ app.post('/users', (req, res) => {
         isAdmin: req.body.isAdmin,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        profilePic: "https://csc309.blob.core.windows.net/swaphub/users/"+req.body.profilePic,
+        profilePic: "https://csc309.blob.core.windows.net/swaphub/users/" + req.body.profilePic,
     })
 
     // save user to database
@@ -143,7 +143,9 @@ app.get('/users/:username', (req, res) => {
         res.status(400).send(error)
     })
 })
+/** end of User Routes **/
 
+/** Listing Routes **/
 // GET all listings
 app.get('/listings', (req, res) => {
     Listing.find().then((listings) => {
@@ -152,9 +154,31 @@ app.get('/listings', (req, res) => {
         res.status(400).send(error)
     })
 })
+
+// GET listing by id
+app.get('/listings/:id', (req, res) => {
+    const id = req.params.id // the id is in the req.params object
+
+    // Good practise is to validate the id
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send()
+    }
+
+    // Otheriwse, findById
+    Listing.findById(id).then((listing) => {
+        if (!listing) {
+            res.status(404).send()
+        } else {
+            res.send(listing)
+        }
+
+    }).catch((error) => {
+        res.status(400).send(error)
+    })
+})
+
 // Create new listing:
 app.post('/listings', (req, res) => {
-
     // Create a new listing
     const listing = new Listing({
         username: req.body.username,
@@ -176,6 +200,26 @@ app.post('/listings', (req, res) => {
     })
 
 })
+
+// DELETE by listing id
+app.delete('/listings/:id', (req, res) => {
+    const id = req.params.id;
+    // Good practise: validate the id
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send()
+    }
+    // Otherwise, find by Id and delete
+    Listing.findByIdAndRemove(id).then((listing) => {
+        if (!listing) {
+            res.status(404).send()
+        } else {
+            res.send(listing)
+        }
+    }).catch((error) => {
+        res.status(400).send(error)
+    })
+})
+/** end of Listing Routes **/
 
 app.listen(port, () => {
     log(`Listening on port ${port}...`)
