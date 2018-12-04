@@ -114,7 +114,12 @@ app.post('/users', (req, res) => {
     // Create a new user
     const user = new User({
         username: req.body.username,
-        password: req.body.password
+        password: req.body.password,
+        email: req.body.email,
+        isAdmin: req.body.isAdmin,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        profilePic: "https://csc309.blob.core.windows.net/swaphub/users/"+req.body.profilePic,
     })
 
     // save user to database
@@ -137,7 +142,7 @@ app.post('/listings', (req, res) => {
         price: req.body.price,
         condition: req.body.condition,
         category: req.body.category,
-        thumbnail: req.body.thumbnail,
+        thumbnail: "https://csc309.blob.core.windows.net/swaphub/listings/" + req.body.thumbnail,
         description: req.body.description,
         likes: 0
     })

@@ -24,7 +24,6 @@ const UserSchema = new mongoose.Schema({
         required: true,
         minlength: 1,
         trim: true, // trim whitespace
-        unique: true,
         validate: {
             validator: validator.isEmail,
             message: 'Not valid email'
@@ -40,7 +39,17 @@ const UserSchema = new mongoose.Schema({
     userListings: [ListingModel.Listing.schema],
     userReviews: [ReviewModel.Review.schema]
 })
-
+UserSchema.statics.findByUsername = function (username) {
+    const User = this
+    return User.findOne({username: username}).then((user) => {
+        if (!user) {
+            return Promise.reject()
+        }
+        return new Promise((res, rej) => {
+            resolve(user)
+        })
+    })
+}
 // created our own find method
 UserSchema.statics.findByUserPassword = function (username, password) {
     const User = this
@@ -49,7 +58,6 @@ UserSchema.statics.findByUserPassword = function (username, password) {
         if (!user) {
             return Promise.reject()
         }
-
         return new Promise((resolve, reject) => {
             bcrypt.compare(password, user.password, (error, result) => {
                 if (result) {
