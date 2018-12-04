@@ -131,6 +131,28 @@ app.post('/users', (req, res) => {
 
 })
 
+//GET user by username
+app.get('/users/:username', (req, res) => {
+    const username = req.params.username;
+    User.findOne({username: username}).then((user) => {
+        if (!user) {
+            res.status(404).send()
+        } else {
+            res.send(user)
+        }
+    }).catch((error) => {
+        res.status(400).send(error)
+    })
+})
+
+// GET all listings
+app.get('/listings', (req, res) => {
+    Listing.find().then((listings) => {
+        res.send(listings) //put in object in case we want to add other properties
+    }, (error) => {
+        res.status(400).send(error)
+    })
+})
 // Create new listing:
 app.post('/listings', (req, res) => {
 

@@ -8,13 +8,33 @@ const searchSubmit = document.querySelector('#searchSubmit');
 
 let adminMode = false;
 
-function setAdminMode(mode){
+function setAdminMode(mode) {
     adminMode = mode;
 }
 
 //Represents the database of all listings on the server
 //Pared down for simplicity
-const allListings = [];
+
+
+let allListings = []
+fetch("/listings").then(res => res.json())
+    .then(obj => {
+        allListings = obj
+        displayAllListings();
+    })
+
+// const Http = new XMLHttpRequest();
+// const url = '/listings';
+// Http.open("GET", url);
+// Http.send();
+// Http.onreadystatechange = function () {
+//     if (this.readyState == 4 && this.status == 200) {
+//         console.log(this.responseText)
+//         allListings = JSON.parse(this.responseText)
+//         console.log(allListings[1])
+//     }
+// }
+
 
 const Listing = function (username, profilePicture, title, date, price, condition, category, thumbnail, description, likes) {
     this.username = username;
@@ -29,20 +49,20 @@ const Listing = function (username, profilePicture, title, date, price, conditio
     this.likes = likes;
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    //This loading of recent listings will be drawn from the server in the future.
-    //So pretend allListings is the server I suppose.
-    allListings.push(new Listing('laflame92cactus', 'travis_pp.jpg', 'Adidas Yeezy 750 Boost', 'Oct 31, 2018', '2560.56', 'NEW', 'Fashion', 'yeezy750feet.jpg', 'New Yeezy 750 Boost signed by Kanye West. Size 13, comes in box, can provide receipt upon request.', 0));
-    //allListings.push(new Listing('gaspump2000', 'lilpump_pp.jpg', '(Very Rare) Basketball', 'Oct 27, 2018', '1000000', 'USED', 'Sports', 'basketball.jpeg', 'Ultra rare basketball used and signed by DROSE himself (not pictured). Willing to exchange for another Iced Out Rolex.', 0));
-    //allListings.push(new Listing('bobbyandnotor', 'logic_pp.jpeg', 'Minecraft PS3 Edition', 'Oct 15, 2018', '12', 'DAMAGED', 'Games', 'minecraft.jpg', 'Minecraft PS3 edition in case. Mild scratches on disk but fully functional.', 0));
-    //allListings.push(new Listing('bobbyandnotor', 'logic_pp.jpeg', 'Vintage Crime and Punishment', 'Oct 25, 2018', '40', 'USED', 'Books', 'dosto.png', 'My grandma gave me this ultra rare masterpiece.', 0));
-    //allListings.push(new Listing('laflame92cactus', 'travis_pp.jpg', '[SALE] My Mixtape', 'Oct 24, 2018', '10', 'NEW', 'Music', 'astroworld.jpg', 'Please everybody buy my tape I swear it\'s fire.', 0));
-    //allListings.push(new Listing('gaspump2000', 'lilpump_pp.jpg', 'BEST Aloe Plant', 'Oct 15, 2018', '5', 'USED', 'Plants & Animals', 'aloe.jpg', 'I usually only grow other types of plants, I\'ll let this go cheap.', 0));
-    //allListings.push(new Listing('bobbyandnotor', 'logic_pp.jpeg', '(Almost) New Ferrari!', 'Oct 10, 2018', '97000', 'USED', 'Vehicles', 'whip.jpeg', 'This is the fastest on the track hands down!', 0));
-    //allListings.push(new Listing('laflame92cactus', 'travis_pp.jpg', 'Broken Sunbeam Toaster', 'Sep 29, 2018', '2', 'DAMAGED', 'Furniture & Appliance', 'toaster.jpeg', 'For parts (bread not included, stop asking)', 0));
-    //Render recent listings pulled from server;
-    displayAllListings();
-});
+// document.addEventListener('DOMContentLoaded', function () {
+//     //This loading of recent listings will be drawn from the server in the future.
+//     //So pretend allListings is the server I suppose.
+//     // allListings.push(new Listing('laflame92cactus', 'travis_pp.jpg', 'Adidas Yeezy 750 Boost', 'Oct 31, 2018', '2560.56', 'NEW', 'Fashion', 'yeezy750feet.jpg', 'New Yeezy 750 Boost signed by Kanye West. Size 13, comes in box, can provide receipt upon request.', 0));
+//     //allListings.push(new Listing('gaspump2000', 'lilpump_pp.jpg', '(Very Rare) Basketball', 'Oct 27, 2018', '1000000', 'USED', 'Sports', 'basketball.jpeg', 'Ultra rare basketball used and signed by DROSE himself (not pictured). Willing to exchange for another Iced Out Rolex.', 0));
+//     //allListings.push(new Listing('bobbyandnotor', 'logic_pp.jpeg', 'Minecraft PS3 Edition', 'Oct 15, 2018', '12', 'DAMAGED', 'Games', 'minecraft.jpg', 'Minecraft PS3 edition in case. Mild scratches on disk but fully functional.', 0));
+//     //allListings.push(new Listing('bobbyandnotor', 'logic_pp.jpeg', 'Vintage Crime and Punishment', 'Oct 25, 2018', '40', 'USED', 'Books', 'dosto.png', 'My grandma gave me this ultra rare masterpiece.', 0));
+//     //allListings.push(new Listing('laflame92cactus', 'travis_pp.jpg', '[SALE] My Mixtape', 'Oct 24, 2018', '10', 'NEW', 'Music', 'astroworld.jpg', 'Please everybody buy my tape I swear it\'s fire.', 0));
+//     //allListings.push(new Listing('gaspump2000', 'lilpump_pp.jpg', 'BEST Aloe Plant', 'Oct 15, 2018', '5', 'USED', 'Plants & Animals', 'aloe.jpg', 'I usually only grow other types of plants, I\'ll let this go cheap.', 0));
+//     //allListings.push(new Listing('bobbyandnotor', 'logic_pp.jpeg', '(Almost) New Ferrari!', 'Oct 10, 2018', '97000', 'USED', 'Vehicles', 'whip.jpeg', 'This is the fastest on the track hands down!', 0));
+//     //allListings.push(new Listing('laflame92cactus', 'travis_pp.jpg', 'Broken Sunbeam Toaster', 'Sep 29, 2018', '2', 'DAMAGED', 'Furniture & Appliance', 'toaster.jpeg', 'For parts (bread not included, stop asking)', 0));
+//     //Render recent listings pulled from server;
+//     displayAllListings();
+// });
 
 listingNavLink.addEventListener('click', resetListingView);
 listingBreadcrumb.querySelector('#breadcrumbAnchor').addEventListener('click', resetListingView);
@@ -123,6 +143,8 @@ function filterListingsByQuery(queryString) {
 }
 
 function createListingDOM(listing) {
+    let listingUser;
+
     const listingElement = document.createElement('div');
     listingElement.classList.add('col-6');
     listingElement.classList.add('col-md-4');
@@ -132,10 +154,13 @@ function createListingDOM(listing) {
 
     const profilePictureContainer = document.createElement('div');
     profilePictureContainer.classList.add('d-inline-block');
-
+    fetch("/users/" + listing.username).then(res => res.json())
+        .then(user => {
+            profilePicture.setAttribute('src', user.profilePic);
+        })
     const profilePicture = document.createElement('img');
     profilePicture.setAttribute('width', '32');
-    profilePicture.setAttribute('src', '/public/app/img/' + listing.profilePicture);
+
     profilePicture.classList.add('profilePic');
 
     profilePictureContainer.appendChild(profilePicture);
@@ -147,10 +172,10 @@ function createListingDOM(listing) {
 
     const profileLink = document.createElement('a');
     listingElement.classList.add('profileLink');
-    if(adminMode){
-        profileLink.setAttribute('href', 'profile_admin.html#'+listing.username);//TODO:
-    }else{
-        profileLink.setAttribute('href', 'profile.html#'+listing.username);//TODO:
+    if (adminMode) {
+        profileLink.setAttribute('href', 'profile_admin.html#' + listing.username);//TODO:
+    } else {
+        profileLink.setAttribute('href', 'profile.html#' + listing.username);//TODO:
     }
     profileLink.appendChild(document.createTextNode(listing.username));
 
@@ -166,9 +191,9 @@ function createListingDOM(listing) {
     title.classList.add('text-center');
 
     const titleLink = document.createElement('a');
-    if(adminMode){
+    if (adminMode) {
         titleLink.setAttribute('href', '/public/app/yeezyListing_admin.html');//TODO:
-    }else{
+    } else {
         titleLink.setAttribute('href', '/public/app/yeezyListing.html');//TODO:
     }
     titleLink.classList.add('listingTitleLink');
@@ -220,7 +245,7 @@ function createListingDOM(listing) {
 
     const image = document.createElement('img');
     image.classList.add('listingImage');
-    image.setAttribute('src', '/public/app/img/' + listing.thumbnail);
+    image.setAttribute('src', listing.thumbnail);
 
     const imageLinkToListing = document.createElement('a');
     imageLinkToListing.setAttribute('href', '#');//TODO:
@@ -240,17 +265,17 @@ function createListingDOM(listing) {
     deleteButton.innerText = "Delete";
     deleteButton.addEventListener("click", deleteListing);
 
-    if(adminMode){
+    if (adminMode) {
         listingElement.appendChild(deleteButton);
     }
 
     return listingElement;
 }
 
-function deleteListing(e){
+function deleteListing(e) {
     const listing = e.target.parentNode;
-    for(let i = 0; i < allListings.length; i++){
-        if(allListings[i].title == listing.querySelector('h5').textContent){
+    for (let i = 0; i < allListings.length; i++) {
+        if (allListings[i].title == listing.querySelector('h5').textContent) {
             allListings.splice(i);
             break;
         }
@@ -273,11 +298,11 @@ function pushListingBreadCrumb(navigationText, resultCount) {
     newBreadCrumb.classList.add('breadcrumb-item');
     newBreadCrumb.classList.add('active');
     let resultString = '';
-    if(resultCount <= 0){
+    if (resultCount <= 0) {
         resultString = ' (' + 'No results' + ')';
-    }else if(resultCount == 1){
+    } else if (resultCount == 1) {
         resultString = ' (' + resultCount + ' result' + ')';
-    }else if(resultCount > 1){
+    } else if (resultCount > 1) {
         resultString = ' (' + resultCount + ' results' + ')';
     }
     newBreadCrumb.appendChild(document.createTextNode(navigationText + resultString));
