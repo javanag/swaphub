@@ -1,4 +1,3 @@
-/* server.js nov19 - 3pm */
 'use strict';
 const log = console.log;
 
