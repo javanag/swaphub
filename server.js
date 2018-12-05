@@ -30,7 +30,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        expires: 60000,
+        expires: 900000,
         httpOnly: true
     }
 }))
@@ -78,13 +78,6 @@ app.post('/users/login', (req, res) => {
     const password = req.body.password
     // find the user with this username and password
     User.findByUserPassword(username, password).then((user) => {
-        // if (!user) {
-        //     res.redirect('/login')
-        // } else {
-        //     // Add to the session cookie
-        //     req.session.user = user._id
-        //     res.redirect('/dashboard')
-        // }
         if (user) {
             req.session.user = user._id;
             req.session.username = user.username;
@@ -180,11 +173,12 @@ app.get('/listings/:id', (req, res) => {
 // Create new listing:
 app.post('/listings', (req, res) => {
     // Create a new listing
+    const currUsername = (req.body.username) ? req.body.username : req.session.username
     const listing = new Listing({
-        username: req.body.username,
+        username: currUsername,
         title: req.body.title,
         date: Date.now(),
-        price: req.body.price,
+        price: parseFloat(req.body.price),
         condition: req.body.condition,
         category: req.body.category,
         thumbnail: "https://csc309.blob.core.windows.net/swaphub/listings/" + req.body.thumbnail,
@@ -192,9 +186,11 @@ app.post('/listings', (req, res) => {
         likes: 0
     })
 
-    // save user to database
+    // save listing to database
     listing.save().then((result) => {
-        res.send(listing)
+        // res.send(listing)
+        // log(result)
+        res.redirect('/')
     }, (error) => {
         res.status(400).send(error) // 400 for bad request
     })
