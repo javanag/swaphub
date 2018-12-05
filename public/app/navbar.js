@@ -180,7 +180,7 @@ function createNavbar(siteView, loggedIn = true) {
         const logoutButton = document.createElement('a');
         logoutButton.className = "btn btn-outline-danger my-2 my-sm-0 ml-3";
         logoutButton.setAttribute("role", "button");
-        logoutButton.setAttribute("href", "index.html");
+        logoutButton.setAttribute("href", "/users/logout");
         logoutButton.setAttribute("id", "logoutButton");
         logoutButton.innerText = "Logout";
         endContainer.appendChild(logoutButton);
@@ -189,7 +189,7 @@ function createNavbar(siteView, loggedIn = true) {
         const loginButton = document.createElement('a');
         loginButton.className = "btn btn-warning my-2 my-sm-0 ml-3";
         loginButton.setAttribute("role", "button");
-        loginButton.setAttribute("href", "/public/app/index.html");
+        loginButton.setAttribute("href", "/login");
         loginButton.setAttribute("id", "loginButton");
         loginButton.innerText = "Login";
         endContainer.appendChild(loginButton);

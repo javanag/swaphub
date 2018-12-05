@@ -10,6 +10,7 @@ const {ObjectID} = require('mongodb')
 // Import our mongoose connection
 const {mongoose} = require('./db/mongoose');
 
+
 // Import the models
 const {User} = require('./models/user')
 const {Listing} = require('./models/listing')
@@ -21,7 +22,47 @@ const app = express();
 // body-parser middleware setup.  Will parse the JSON and convert to object
 app.use(bodyParser.json());
 // parse incoming parameters to req.body
-app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.urlencoded({extended: true}));
+
+/** Azure upload try **/
+//Import azure connection:
+const storage = require('azure-storage');
+const blobService = storage.createBlobService("DefaultEndpointsProtocol=https;AccountName=csc309;AccountKey=mQsLsREx0NQO3YrnWTjzzYpJ/t0zHzh3cMTs1GBc6/i0edJb2jfcFWCFxnFlamPtFEyddrG+WWhZ08wE8wV6wQ==;EndpointSuffix=core.windows.net");
+
+const
+    router = express.Router()
+    , multer = require('multer')
+    , inMemoryStorage = multer.memoryStorage()
+    , uploadStrategy = multer({storage: inMemoryStorage}).single('file')
+    , getStream = require('into-stream')
+    , containerName = 'swaphub'
+;
+
+// app.use('/*', fileUpload.single('file'));
+const handleError = (err, res) => {
+    res.status(500);
+    res.render('error', {error: err});
+};
+
+router.post('/', uploadStrategy, (req, res) => {
+    const
+        blobName = eq.file.originalname
+        , stream = getStream(req.file.buffer)
+        , streamLength = req.file.buffer.length
+    ;
+    blobService.createBlockBlobFromStream(containerName, blobName, stream, streamLength, err => {
+
+        if (err) {
+            handleError(err);
+            return;
+        }
+
+        res.render('success', {
+            message: 'File uploaded to Azure Blob storage.'
+        });
+    });
+});
+/** end of Azure Upload try **/
 
 // session
 app.use(session({
@@ -47,11 +88,6 @@ const sessionChecker = (req, res, next) => {
 // static route to public folder
 app.use('/public', express.static(__dirname + '/public'));
 
-// route for the root: redirect to the login page
-// app.get('/', sessionChecker, (req, res) => {
-// 	res.redirect('/login')
-// })
-
 // route for user login page
 app.get('/login', sessionChecker, (req, res) => {
     res.sendFile(__dirname + '/public/app/index.html')
@@ -70,9 +106,7 @@ app.get('/', (req, res) => {
     }
 })
 
-
 // Routes for logging in and logging out users
-
 app.post('/users/login', (req, res) => {
     const username = req.body.username
     const password = req.body.password
@@ -173,6 +207,21 @@ app.get('/listings/:id', (req, res) => {
 // Create new listing:
 app.post('/listings', (req, res) => {
     // Create a new listing
+    /** Upload to azure try 2
+     log(req)
+     log(req.file)
+     let path = req.file.thumbnail.path;
+     log(path)
+     blobService.createBlockBlobFromLocalFile("swaphub", "csc309", path, (error, result, response) => {
+        if (error) {
+            log(error)
+        } else {
+            log(result)
+            log("uploaded to azure");
+        }
+    })
+     res.send("OK");
+     **/
     const currUsername = (req.body.username) ? req.body.username : req.session.username
     const listing = new Listing({
         username: currUsername,
