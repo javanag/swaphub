@@ -50,7 +50,7 @@ app.use(session({
 // Write the middleware function, then use it in our routes
 const sessionChecker = (req, res, next) => {
     if (req.session.user) {
-        res.redirect('/dashboard')
+        res.redirect('/listings')
     } else {
         next()
     }
@@ -86,13 +86,6 @@ app.post('/users/login', (req, res) => {
     const password = req.body.password
     // find the user with this username and password
     User.findByUserPassword(username, password).then((user) => {
-        // if (!user) {
-        //     res.redirect('/login')
-        // } else {
-        //     // Add to the session cookie
-        //     req.session.user = user._id
-        //     res.redirect('/dashboard')
-        // }
         if (user) {
             req.session.user = user._id;
             req.session.username = user.username;
@@ -156,18 +149,18 @@ app.get('/users/:username', (req, res) => {
 /** Listing Routes **/
 // GET all listings
 app.get('/listings', (req, res) => {
-    if(req.session.username){
+    if (req.session.username) {
         res.render("listings", req.session);
-    }else{
-        res.render("listings", {username : "NOTLOGGEDIN"});
+    } else {
+        res.render("listings", {username: "NOTLOGGEDIN"});
     }
 })
 
 app.get('/sell', (req, res) => {
-    if(req.session.username){
+    if (req.session.username) {
         res.render("add_listing", req.session);
-    }else{
-        res.render("add_listing", {username : "NOTLOGGEDIN"});
+    } else {
+        res.render("add_listing", {username: "NOTLOGGEDIN"});
     }
 })
 
@@ -196,22 +189,25 @@ app.get('/listings/:id', (req, res) => {
         } else {
             const data = {
                 id: listing.id,
-                title : listing.title,
-                condition : listing.condition,
-                poster : listing.username,
-                poster_profilepic : 'https://csc309.blob.core.windows.net/swaphub/users/' + listing.username,
-                price : listing.price,
-                date : date.format(new Date(listing.date), 'MMM D[,] YYYY'),
-                description : listing.description,
-                images : [
-                    {demoimgurl : 'img/yeezy750.jpg'},
-                    {demoimgurl : 'img/yeezy750feet.jpg'},
+                title: listing.title,
+                condition: listing.condition,
+                poster: listing.username,
+                // poster_profilepic: ,
+                price: listing.price,
+                date: date.format(new Date(listing.date), 'MMM D[,] YYYY'),
+                description: listing.description,
+                images: [
+                    {demoimgurl: 'img/yeezy750.jpg'},
+                    {demoimgurl: 'img/yeezy750feet.jpg'},
                 ],
-                username : req.session.username,
-                profilepic : 'https://csc309.blob.core.windows.net/swaphub/users/' + req.session.username,
-                isadmin : req.session.isAdmin
+                username: req.session.username,
+                profilepic: 'https://csc309.blob.core.windows.net/swaphub/users/' + req.session.username,
+                isadmin: req.session.isAdmin
             };
-            res.render("listing_template", data);
+            User.findOne({username: listing.username})
+                .then((user) => data["poster_profilepic"] = user.profilePic)
+                .then(() => res.render("listing_template", data))
+
         }
 
     }).catch((error) => {

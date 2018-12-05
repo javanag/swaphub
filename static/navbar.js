@@ -5,9 +5,9 @@ let currentUserName = '';
 let currentUserImage = '';
 let index = false;
 
-function setupNavbarUser(userName, userImage){
+function setupNavbarUser(userName, userImage) {
     currentUserName = userName;
-    currentUserImage = userImage;
+    // currentUserImage = userImage;
 }
 
 const navItems = {
@@ -90,10 +90,10 @@ const navItems = {
         itemsArray[1].firstChild.setAttribute("href", "/sell/");
         // About
         itemsArray[2].firstChild.innerText = "About";
-        if(index){
-        	itemsArray[0].firstChild.setAttribute("href", "#");
-        	itemsArray[1].firstChild.setAttribute("href", "#");
-        	itemsArray[2].firstChild.setAttribute("href", "#");
+        if (index) {
+            itemsArray[0].firstChild.setAttribute("href", "#");
+            itemsArray[1].firstChild.setAttribute("href", "#");
+            itemsArray[2].firstChild.setAttribute("href", "#");
         }
     },
 };
@@ -148,22 +148,27 @@ function createNavbar(siteView, loggedIn = true) {
     searchButton.innerText = "Search";
     searchForm.appendChild(searchButton);
     endContainer.appendChild(searchForm);
-    if (loggedIn){
+    if (loggedIn) {
         //profile picture Container
         const profilePicContainer = document.createElement("span");
         profilePicContainer.className = "profilePicContainer";
         const profilePic = document.createElement("a");
         profilePic.className = "profileLink text-light";
-        if(currentUserName == 'gaspump2000'){
+        if (currentUserName == 'gaspump2000') {
             profilePic.setAttribute("href", "/public/app/profile_admin.html#" + currentUserName);
-        }else{
+        } else {
             profilePic.setAttribute("href", "/public/app/profile.html#" + currentUserName);
         }
         profilePicContainer.appendChild(profilePic);
         const profileImg = document.createElement('img');
         profileImg.className = "profilePic";
         profileImg.setAttribute("width", "40");
-        profileImg.setAttribute("src", "/public/app/img/" +  currentUserImage);
+        //fetch userImage:
+        fetch("/users/" + currentUserName).then(res => res.json())
+            .then(user => {
+                profileImg.setAttribute("src", user.profilePic);
+            })
+
         profilePic.appendChild(profileImg);//todo: load from user object
         profilePic.appendChild(document.createTextNode("@" + currentUserName));
         endContainer.appendChild(profilePicContainer);
@@ -175,8 +180,7 @@ function createNavbar(siteView, loggedIn = true) {
         logoutButton.setAttribute("id", "logoutButton");
         logoutButton.innerText = "Logout";
         endContainer.appendChild(logoutButton);
-    }
-    else{
+    } else {
         const loginButton = document.createElement('a');
         loginButton.className = "btn btn-warning my-2 my-sm-0 ml-3";
         loginButton.setAttribute("role", "button");
