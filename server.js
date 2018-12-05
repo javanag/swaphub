@@ -6,10 +6,10 @@ const port = process.env.PORT || 3000
 const bodyParser = require('body-parser') // middleware for parsing HTTP body from client
 const session = require('express-session')
 const {ObjectID} = require('mongodb')
+const date = require('date-and-time');
 
 // Import our mongoose connection
 const {mongoose} = require('./db/mongoose');
-
 
 // Import the models
 const {User} = require('./models/user')
@@ -18,51 +18,21 @@ const {Listing} = require('./models/listing')
 
 // express
 const app = express();
-// app.use(express.static(__dirname + '/public'));
+
+const mustacheExpress = require('mustache-express');
+
+// Register '.mustache' extension with The Mustache Express
+app.engine('mustache', mustacheExpress());
+app.set('view engine', 'mustache');
+app.set('views', __dirname + '/template');
+
+app.use('/listings', express.static('static'));
+app.use('/sell', express.static('static'));
+
 // body-parser middleware setup.  Will parse the JSON and convert to object
 app.use(bodyParser.json());
 // parse incoming parameters to req.body
-app.use(bodyParser.urlencoded({extended: true}));
-
-/** Azure upload try **/
-//Import azure connection:
-const storage = require('azure-storage');
-const blobService = storage.createBlobService("DefaultEndpointsProtocol=https;AccountName=csc309;AccountKey=mQsLsREx0NQO3YrnWTjzzYpJ/t0zHzh3cMTs1GBc6/i0edJb2jfcFWCFxnFlamPtFEyddrG+WWhZ08wE8wV6wQ==;EndpointSuffix=core.windows.net");
-
-const
-    router = express.Router()
-    , multer = require('multer')
-    , inMemoryStorage = multer.memoryStorage()
-    , uploadStrategy = multer({storage: inMemoryStorage}).single('file')
-    , getStream = require('into-stream')
-    , containerName = 'swaphub'
-;
-
-// app.use('/*', fileUpload.single('file'));
-const handleError = (err, res) => {
-    res.status(500);
-    res.render('error', {error: err});
-};
-
-router.post('/', uploadStrategy, (req, res) => {
-    const
-        blobName = eq.file.originalname
-        , stream = getStream(req.file.buffer)
-        , streamLength = req.file.buffer.length
-    ;
-    blobService.createBlockBlobFromStream(containerName, blobName, stream, streamLength, err => {
-
-        if (err) {
-            handleError(err);
-            return;
-        }
-
-        res.render('success', {
-            message: 'File uploaded to Azure Blob storage.'
-        });
-    });
-});
-/** end of Azure Upload try **/
+app.use(bodyParser.urlencoded({extended: true}))
 
 // session
 app.use(session({
@@ -71,7 +41,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        expires: 900000,
+        expires: 60000,
         httpOnly: true
     }
 }))
@@ -88,6 +58,11 @@ const sessionChecker = (req, res, next) => {
 // static route to public folder
 app.use('/public', express.static(__dirname + '/public'));
 
+// route for the root: redirect to the login page
+// app.get('/', sessionChecker, (req, res) => {
+// 	res.redirect('/login')
+// })
+
 // route for user login page
 app.get('/login', sessionChecker, (req, res) => {
     res.sendFile(__dirname + '/public/app/index.html')
@@ -97,21 +72,27 @@ app.get('/login', sessionChecker, (req, res) => {
 app.get('/', (req, res) => {
     // check if we have an active session
     if (req.session.user) {
-        if (req.session.isAdmin)
-            res.sendFile(__dirname + '/public/app/listings_admin.html');
-        else
-            res.sendFile(__dirname + '/public/app/listings.html')
+        res.redirect('/listings/')
     } else {
-        res.redirect('/login')
+        res.redirect('/login/')
     }
 })
 
+
 // Routes for logging in and logging out users
+
 app.post('/users/login', (req, res) => {
     const username = req.body.username
     const password = req.body.password
     // find the user with this username and password
     User.findByUserPassword(username, password).then((user) => {
+        // if (!user) {
+        //     res.redirect('/login')
+        // } else {
+        //     // Add to the session cookie
+        //     req.session.user = user._id
+        //     res.redirect('/dashboard')
+        // }
         if (user) {
             req.session.user = user._id;
             req.session.username = user.username;
@@ -175,6 +156,23 @@ app.get('/users/:username', (req, res) => {
 /** Listing Routes **/
 // GET all listings
 app.get('/listings', (req, res) => {
+    if(req.session.username){
+        res.render("listings", req.session);
+    }else{
+        res.render("listings", {username : "NOTLOGGEDIN"});
+    }
+})
+
+app.get('/sell', (req, res) => {
+    if(req.session.username){
+        res.render("add_listing", req.session);
+    }else{
+        res.render("add_listing", {username : "NOTLOGGEDIN"});
+    }
+})
+
+//moved json returning function under API route
+app.get('/api/listings', (req, res) => {
     Listing.find().then((listings) => {
         res.send(listings) //put in object in case we want to add other properties
     }, (error) => {
@@ -182,8 +180,47 @@ app.get('/listings', (req, res) => {
     })
 })
 
-// GET listing by id
+// Display listing for given id
 app.get('/listings/:id', (req, res) => {
+    const id = req.params.id // the id is in the req.params object
+
+    // Good practise is to validate the id
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send()
+    }
+
+    // Otheriwse, findById
+    Listing.findById(id).then((listing) => {
+        if (!listing) {
+            res.status(404).send()
+        } else {
+            const data = {
+                id: listing.id,
+                title : listing.title,
+                condition : listing.condition,
+                poster : listing.username,
+                poster_profilepic : 'https://csc309.blob.core.windows.net/swaphub/users/' + listing.username,
+                price : listing.price,
+                date : date.format(new Date(listing.date), 'MMM D[,] YYYY'),
+                description : listing.description,
+                images : [
+                    {demoimgurl : 'img/yeezy750.jpg'},
+                    {demoimgurl : 'img/yeezy750feet.jpg'},
+                ],
+                username : req.session.username,
+                profilepic : 'https://csc309.blob.core.windows.net/swaphub/users/' + req.session.username,
+                isadmin : req.session.isAdmin
+            };
+            res.render("listing_template", data);
+        }
+
+    }).catch((error) => {
+        res.status(400).send(error)
+    })
+})
+
+//Originally just /listings/:id
+app.get('/api/listings/:id', (req, res) => {
     const id = req.params.id // the id is in the req.params object
 
     // Good practise is to validate the id
@@ -205,29 +242,13 @@ app.get('/listings/:id', (req, res) => {
 })
 
 // Create new listing:
-app.post('/listings', (req, res) => {
+app.post('/api/listings', (req, res) => {
     // Create a new listing
-    /** Upload to azure try 2
-     log(req)
-     log(req.file)
-     let path = req.file.thumbnail.path;
-     log(path)
-     blobService.createBlockBlobFromLocalFile("swaphub", "csc309", path, (error, result, response) => {
-        if (error) {
-            log(error)
-        } else {
-            log(result)
-            log("uploaded to azure");
-        }
-    })
-     res.send("OK");
-     **/
-    const currUsername = (req.body.username) ? req.body.username : req.session.username
     const listing = new Listing({
-        username: currUsername,
+        username: req.body.username,
         title: req.body.title,
         date: Date.now(),
-        price: parseFloat(req.body.price),
+        price: req.body.price,
         condition: req.body.condition,
         category: req.body.category,
         thumbnail: "https://csc309.blob.core.windows.net/swaphub/listings/" + req.body.thumbnail,
@@ -235,11 +256,9 @@ app.post('/listings', (req, res) => {
         likes: 0
     })
 
-    // save listing to database
+    // save user to database
     listing.save().then((result) => {
-        // res.send(listing)
-        // log(result)
-        res.redirect('/')
+        res.send(listing)
     }, (error) => {
         res.status(400).send(error) // 400 for bad request
     })
@@ -247,7 +266,7 @@ app.post('/listings', (req, res) => {
 })
 
 // DELETE by listing id
-app.delete('/listings/:id', (req, res) => {
+app.delete('/api/listings/:id', (req, res) => {
     const id = req.params.id;
     // Good practise: validate the id
     if (!ObjectID.isValid(id)) {
@@ -269,11 +288,3 @@ app.delete('/listings/:id', (req, res) => {
 app.listen(port, () => {
     log(`Listening on port ${port}...`)
 });
-
-
-
-
-
-
-
-
