@@ -12,7 +12,15 @@
 <body class="bg-light">
 <!--Reusable navbar-->
 <script type="text/javascript" src="navbar.js"></script>
-<script>setupNavbarUser("{{username}}", "{{username}}.jpg");createNavbar("profile");</script>
+<script>
+  {{#username}}
+  setupNavbarUser("{{username}}", "{{username}}.jpg");
+  createNavbar("profile");
+  {{/username}}
+  {{^username}}
+    createNavbar("profile", false);
+  {{/username}}
+</script>
 <!--Reusable navbar ends-->
 <div class="login-form" id="addContainer"></div>
 

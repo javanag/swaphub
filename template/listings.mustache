@@ -12,7 +12,15 @@
 <body class="bg-light">
 <!--Reusable navbar-->
 <script type="text/javascript" src="navbar.js"></script>
-<script>setupNavbarUser("{{username}}", "{{username}}.jpg");createNavbar("listings");</script>
+<script>
+  {{#username}}
+  setupNavbarUser("{{username}}", "{{username}}.jpg");
+  createNavbar("listings");
+  {{/username}}
+  {{^username}}
+    createNavbar("listings", false);
+  {{/username}}
+</script>
 <!--Reusable navbar ends-->
 
 <!-- listings body -->

@@ -153,7 +153,7 @@ app.get('/listings', (req, res) => {
     if (req.session.username) {
         res.render("listings", req.session);
     } else {
-        res.render("listings", {username: "NOTLOGGEDIN"});
+        res.render("listings");
     }
 })
 
@@ -161,7 +161,7 @@ app.get('/sell', (req, res) => {
     if (req.session.username) {
         res.render("add_listing", req.session);
     } else {
-        res.render("add_listing", {username: "NOTLOGGEDIN"});
+        res.render("add_listing");
     }
 })
 
