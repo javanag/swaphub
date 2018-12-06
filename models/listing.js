@@ -13,6 +13,7 @@ const ListingSchema = new mongoose.Schema({
     condition: String,
     category: String,
     thumbnail: String,
+    images: [String],
     description: String,
     likes: Number
 })

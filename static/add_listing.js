@@ -46,12 +46,24 @@ function displayAddDOM() {
     conditionContainer.className = "form-group";
     addForm.appendChild(conditionContainer);
 
-    const listingCondition = document.createElement("input");
+    const listingCondition = document.createElement("select");
     listingCondition.id = "listingCondition";
     listingCondition.setAttribute("name", "condition");
     listingCondition.className = "form-control";
     listingCondition.setAttribute("type", "text");
-    listingCondition.setAttribute("placeholder", "Listing condition");
+    const conditionPlaceholder = document.createElement("option");
+    conditionPlaceholder.setAttribute("value", "");
+    conditionPlaceholder.hidden = true;
+    conditionPlaceholder.innerText = "Listing condition...";
+    listingCondition.appendChild(conditionPlaceholder);
+    // listingCondition.setAttribute("placeholder", "Listing condition");
+    const conditions = ["NEW","USED","DAMAGED"];
+    conditions.forEach((condition) => {
+        const optionEle = document.createElement("option");
+        optionEle.setAttribute("value", condition);
+        optionEle.innerText = condition;
+        listingCondition.appendChild(optionEle);
+    })
     conditionContainer.appendChild(listingCondition);
 
     const categoryContainer = document.createElement("div");
@@ -62,6 +74,11 @@ function displayAddDOM() {
     listingCategory.id = "listingCategory";
     listingCategory.setAttribute("name", "category");
     listingCategory.className = "form-control";
+    const categoryPlaceholder = document.createElement("option");
+    categoryPlaceholder.setAttribute("value", "");
+    categoryPlaceholder.hidden = true;
+    categoryPlaceholder.innerText = "Listing category...";
+    listingCategory.appendChild(categoryPlaceholder);
     const categories = ["Books", "Electronics", "Fashion", "Films & Photography", "Furniture & Appliance", "Games", "Music", "Plants & Animals", "Sports", "Vehicles", "Miscellaneous"];
     categories.forEach((cat) => {
         const optionEle = document.createElement("option");
@@ -69,7 +86,6 @@ function displayAddDOM() {
         optionEle.innerText = cat;
         listingCategory.appendChild(optionEle);
     })
-
     categoryContainer.appendChild(listingCategory);
 
     const descriptionContainer = document.createElement("div");
@@ -103,6 +119,28 @@ function displayAddDOM() {
     listingImage.className = "form-control-file";
     listingImage.setAttribute("type", "file");
     tempDiv.appendChild(listingImage);
+
+    const uploadContainer2 = document.createElement("div");
+    uploadContainer2.className = "form-group row mt-4";
+    addForm.appendChild(uploadContainer2);
+
+    const imagesLabel = document.createElement("label");
+    imagesLabel.innerText = "Listing images:";
+    imagesLabel.className = "col-sm-4 col-form-label font-weight-bold"
+    imagesLabel.setAttribute("for", "listingImages");
+    uploadContainer2.appendChild(imagesLabel);
+
+    const tempDiv2 = document.createElement("div");
+    tempDiv2.className = "col-sm-7";
+    uploadContainer2.appendChild(tempDiv2)
+    const listingImages = document.createElement("input");
+    listingImages.id = "listingImages";
+    listingImages.setAttribute("name", "images");
+    listingImages.className = "form-control-file";
+    listingImages.setAttribute("type", "file");
+    listingImages.multiple = true;
+    // listingImages.setAttribute("multiple", );
+    tempDiv2.appendChild(listingImages);
 
     const addButton = document.createElement("button");
     addButton.className = "btn btn-success btn-block btn-lg mt-3";

@@ -7,6 +7,7 @@ const bodyParser = require('body-parser') // middleware for parsing HTTP body fr
 const session = require('express-session')
 const {ObjectID} = require('mongodb')
 const date = require('date-and-time');
+const imageBaseURL = "https://csc309.blob.core.windows.net/swaphub"
 
 // Import our mongoose connection
 const {mongoose} = require('./db/mongoose');
@@ -119,7 +120,7 @@ app.post('/users', (req, res) => {
         isAdmin: req.body.isAdmin,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        profilePic: "https://csc309.blob.core.windows.net/swaphub/users/" + req.body.profilePic,
+        profilePic: imageBaseURL + "/users/" + req.body.profilePic,
     })
 
     // save user to database
@@ -240,21 +241,24 @@ app.get('/api/listings/:id', (req, res) => {
 // Create new listing:
 app.post('/api/listings', (req, res) => {
     // Create a new listing
+
     const listing = new Listing({
-        username: req.body.username,
+        username: req.session.username,
         title: req.body.title,
         date: Date.now(),
         price: req.body.price,
         condition: req.body.condition,
         category: req.body.category,
-        thumbnail: "https://csc309.blob.core.windows.net/swaphub/listings/" + req.body.thumbnail,
+        thumbnail: imageBaseURL + "/listings/" + req.body.thumbnail,
+        images: req.body.images.map((image) => imageBaseURL + "/listings/" + image),
         description: req.body.description,
         likes: 0
     })
-
-    // save user to database
+    log(listing)
+    // save listing to database
     listing.save().then((result) => {
-        res.send(listing)
+        // res.send(listing)
+        res.redirect("/listings")
     }, (error) => {
         res.status(400).send(error) // 400 for bad request
     })
