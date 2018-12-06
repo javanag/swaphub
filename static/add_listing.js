@@ -8,6 +8,7 @@ function displayAddDOM() {
     addForm.id = "addForm";
     addForm.setAttribute("method", "post");
     addForm.setAttribute("action", "/api/listings");
+    addForm.setAttribute("enctype", "multipart/form-data");
     // addForm.setAttribute("onsubmit", "validateForm")
     // addForm.addEventListener("submit", addForm.submit);
     addContainer.appendChild(addForm);

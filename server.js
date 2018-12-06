@@ -20,6 +20,35 @@ const {Listing} = require('./models/listing')
 // express
 const app = express();
 
+
+/** region Azure upload **/
+const
+    multer = require('multer')
+    , inMemoryStorage = multer.memoryStorage()
+    , uploadStrategy = multer({storage: inMemoryStorage}).fields([
+        {name: 'thumbnail', maxCount: 1},
+        {name: 'images', maxCount: 5}
+    ])
+
+    , azureStorage = require('azure-storage')
+    ,
+    blobService = azureStorage.createBlobService("DefaultEndpointsProtocol=https;AccountName=csc309;AccountKey=mQsLsREx0NQO3YrnWTjzzYpJ/t0zHzh3cMTs1GBc6/i0edJb2jfcFWCFxnFlamPtFEyddrG+WWhZ08wE8wV6wQ==;EndpointSuffix=core.windows.net")
+
+    , getStream = require('into-stream')
+    , containerName = 'swaphub'
+;
+
+const handleError = (err, res) => {
+    res.status(500);
+    res.render('error', {error: err});
+};
+
+const getBlobName = originalName => {
+    const identifier = Math.random().toString().replace(/0\./, ''); // remove "0." from start of string
+    return `${identifier}-${originalName}`;
+};
+/** endregion of azure Upload **/
+
 const mustacheExpress = require('mustache-express');
 
 // Register '.mustache' extension with The Mustache Express
@@ -58,11 +87,6 @@ const sessionChecker = (req, res, next) => {
 }
 // static route to public folder
 app.use('/public', express.static(__dirname + '/public'));
-
-// route for the root: redirect to the login page
-// app.get('/', sessionChecker, (req, res) => {
-// 	res.redirect('/login')
-// })
 
 // route for user login page
 app.get('/login', sessionChecker, (req, res) => {
@@ -239,8 +263,28 @@ app.get('/api/listings/:id', (req, res) => {
 })
 
 // Create new listing:
-app.post('/api/listings', (req, res) => {
+
+app.post('/api/listings', uploadStrategy, (req, res) => {
     // Create a new listing
+    const thumbnailFile = req.files['thumbnail'][0];
+    const imagesFile = req.files['images'];
+    imagesFile.push(thumbnailFile);
+
+    imagesFile.forEach((file) => {
+        log(file);
+        const
+            blobName = "listings/" + file.originalname
+            , stream = getStream(file.buffer)
+            , streamLength = file.buffer.length
+        ;
+        blobService.createBlockBlobFromStream(containerName, blobName, stream, streamLength, err => {
+
+            if (err) {
+                handleError(err);
+                return;
+            }
+        });
+    });
 
     const listing = new Listing({
         username: req.session.username,
@@ -249,8 +293,8 @@ app.post('/api/listings', (req, res) => {
         price: req.body.price,
         condition: req.body.condition,
         category: req.body.category,
-        thumbnail: imageBaseURL + "/listings/" + req.body.thumbnail,
-        images: req.body.images.map((image) => imageBaseURL + "/listings/" + image),
+        thumbnail: imageBaseURL + "/listings/" + thumbnailFile.originalname,
+        images: imagesFile.map((image) => imageBaseURL + "/listings/" + image.originalname),
         description: req.body.description,
         likes: 0
     })
