@@ -26,5 +26,8 @@
 </div>
 
 <script type="text/javascript" src="script.js"></script>
+{{#isAdmin}}
+<script type="text/javascript">setAdminMode({{isAdmin}});</script>
+{{/isAdmin}}
 </body>
 </html>
