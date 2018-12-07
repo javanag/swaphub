@@ -154,11 +154,7 @@ function createNavbar(siteView, loggedIn = true) {
         profilePicContainer.className = "profilePicContainer";
         const profilePic = document.createElement("a");
         profilePic.className = "profileLink text-light";
-        if (currentUserName == 'gaspump2000') {
-            profilePic.setAttribute("href", "/public/app/profile_admin.html#" + currentUserName);
-        } else {
-            profilePic.setAttribute("href", "/users/" + currentUserName);
-        }
+        profilePic.setAttribute("href", "/users/" + currentUserName);
         profilePicContainer.appendChild(profilePic);
         const profileImg = document.createElement('img');
         profileImg.className = "profilePic";

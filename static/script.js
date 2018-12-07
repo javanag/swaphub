@@ -142,11 +142,7 @@ function createListingDOM(listing) {
 
     const profileLink = document.createElement('a');
     listingElement.classList.add('profileLink');
-    if (adminMode) {
-        profileLink.setAttribute('href', 'profile_admin.html#' + listing.username);//TODO:
-    } else {
-        profileLink.setAttribute('href', '/users/' + listing.username);//TODO:
-    }
+    profileLink.setAttribute('href', '/users/' + listing.username);//TODO:
     profileLink.appendChild(document.createTextNode(listing.username));
 
     const date = document.createElement('div');
