@@ -1,9 +1,8 @@
 /* Users model */
 const mongoose = require('mongoose')
+const ObjectID = mongoose.Schema.Types.ObjectId;
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
-const ListingModel = require('./listing')
-const ReviewModel = require('./review')
 
 // We'll make this model in a different way
 const UserSchema = new mongoose.Schema({
@@ -36,8 +35,8 @@ const UserSchema = new mongoose.Schema({
     firstName: String,
     lastName: String,
     profilePic: String,
-    userListings: [ListingModel.Listing.schema],
-    userReviews: [ReviewModel.Review.schema]
+    userListings: [{ type: ObjectID, ref: 'Listing' }],
+    userReviews: [{ type: ObjectID, ref: 'Review' }]
 })
 UserSchema.statics.findByUsername = function (username) {
     const User = this

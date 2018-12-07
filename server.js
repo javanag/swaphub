@@ -108,7 +108,6 @@ app.get('/', (req, res) => {
 
 
 // Routes for logging in and logging out users
-
 //Data modification
 app.post('/users/login', (req, res) => {
     const username = req.body.username
@@ -157,7 +156,7 @@ app.get('/users/:username', (req, res) => {
     })
 })
 
-/** User routes **/
+// region User Routes
 app.post('/api/users', (req, res) => {
 
     // Create a new user
@@ -218,13 +217,15 @@ app.post('/users/signup', signUploadStrategy, (req, res) => {
 //GET user by username
 app.get('/api/users/:username', (req, res) => {
     const username = req.params.username;
-    User.findOne({username: username}).then((user) => {
-        if (!user) {
-            res.status(404).send()
-        } else {
-            res.send(user)
-        }
-    }).catch((error) => {
+    User.findOne({username: username})
+        .populate('userListings')
+        .then((user) => {
+            if (!user) {
+                res.status(404).send()
+            } else {
+                res.send(user)
+            }
+        }).catch((error) => {
         res.status(400).send(error)
     })
 })
@@ -290,9 +291,41 @@ app.post('/api/users/update/:id', (req, res) => {
     })
 
 })
-/** end of User Routes **/
+//Get user Listings (Deprecated for populate)
+app.get('/api/userlistings/:id', (req, res) => {
+    const id = req.params.id // the id is in the req.params object
 
-/** Listing Routes **/
+    // Good practise is to validate the id
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send()
+    }
+
+    // Otheriwse, findById
+    User.findById(id).then((user) => {
+        if (!user) {
+            res.status(404).send()
+        } else {
+            Listing.find({
+                '_id':
+                    {$in: user.userListings}
+            }, (listings) => {
+                if (!listings)
+                    res.status(404).send();
+                else {
+                    res.send(listings)
+                }
+            }).catch((error) => {
+                res.status(400).send(error)
+            })
+        }
+    }).catch((error) => {
+        res.status(400).send(error)
+    })
+});
+
+// endregion of User Routes
+
+// region Listing Routes
 // GET all listings
 app.get('/listings', (req, res) => {
     if (req.session.username) {
@@ -339,13 +372,11 @@ app.get('/listings/:id', (req, res) => {
                 title: listing.title,
                 condition: listing.condition,
                 poster: listing.username,
-                // poster_profilepic: ,
                 price: listing.price,
                 date: date.format(new Date(listing.date), 'MMM D[,] YYYY'),
                 description: listing.description,
                 images: listing.images,
                 username: req.session.username,
-                // profilepic: 'https://csc309.blob.core.windows.net/swaphub/users/' + req.session.username,
                 isadmin: req.session.isAdmin
             };
             User.findOne({username: listing.username})
@@ -424,7 +455,7 @@ app.post('/api/listings', uploadStrategy, (req, res) => {
         // res.send(listing)
         log(result)
         User.findById(req.session.user).then((user) => {
-            user.userListings.push(result)
+            user.userListings.push(result._id)
             user.save()
         }).catch((error) => {
             res.status(400).send(error)
@@ -454,7 +485,7 @@ app.delete('/api/listings/:id', (req, res) => {
         res.status(400).send(error)
     })
 })
-/** end of Listing Routes **/
+// endregion Listing Routes
 
 app.listen(port, () => {
     log(`Listening on port ${port}...`)

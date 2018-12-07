@@ -47,14 +47,15 @@ const userRate = function (user) {
 function createProfilePage() {
     let isAdmin;
     fetch("/api/users/" + sessUsername).then(res => res.json())
-        .then(user => isAdmin = user.isAdmin);
+        .then(user => isAdmin = user.isAdmin)
+        .catch((error) => console.log(error));
 
     fetch("/api/users/" + reqUsername).then(res => res.json())
         .then(user => {
             displayProfileInfo(user, isAdmin);
             displayUserListings(user.userListings);
             displayUserReviews(user.userReviews);
-        })
+        }).catch((error) => console.log(error))
 }
 
 //creates user's profile
