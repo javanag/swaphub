@@ -57,6 +57,7 @@ app.set('view engine', 'mustache');
 app.set('views', __dirname + '/template');
 
 app.use('/listings', express.static('static'));
+app.use('/users', express.static('static'));
 app.use('/sell', express.static('static'));
 app.use('/login', express.static('static'));
 
@@ -135,6 +136,26 @@ app.get('/users/logout', (req, res) => {
     })
 })
 
+// Display user for given username
+app.get('/users/:username', (req, res) => {
+    const requestedUsername = req.params.username; // the id is in the req.params object
+    const sessUsername = req.session.username;
+    // Otheriwse, findByUsername
+    User.findOne({username: requestedUsername}).then((user) => {
+        if (!user) {
+            res.status(404).send()
+        } else {
+            res.render("profile", {
+                reqUser: user.username,
+                sessUser: sessUsername
+            });
+        }
+
+    }).catch((error) => {
+        res.status(400).send(error)
+    })
+})
+
 /** User routes **/
 app.post('/users', (req, res) => {
 
@@ -159,7 +180,7 @@ app.post('/users', (req, res) => {
 })
 
 //GET user by username
-app.get('/users/:username', (req, res) => {
+app.get('/api/users/:username', (req, res) => {
     const username = req.params.username;
     User.findOne({username: username}).then((user) => {
         if (!user) {
@@ -170,6 +191,68 @@ app.get('/users/:username', (req, res) => {
     }).catch((error) => {
         res.status(400).send(error)
     })
+})
+
+// DELETE by user id
+app.delete('/api/users/:id', (req, res) => {
+    const id = req.params.id;
+    // Good practise: validate the id
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send()
+    }
+    // Otherwise, find by Id and delete
+    User.findByIdAndRemove(id).then((user) => {
+        if (!user) {
+            res.status(404).send()
+        } else {
+            Listing.remove({
+                id: {
+                    $in: user.userListings.map(
+                        (listing) => ObjectID(listing.id))
+                }
+            });
+            res.send(user)
+        }
+    }).catch((error) => {
+        res.status(400).send(error)
+    })
+});
+
+app.post('/api/users/update/:id', (req, res) => {
+    const id = req.params.id;
+
+    // Get the new name and year from the request body
+    let data = req.body
+    log(data)
+    // const properties = { name, year }
+
+    // Good practise is to validate the id
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send()
+    }
+    // Update it
+    User.findById(id).then((user) => {
+        if (!user) {
+            res.status(404).send()
+        } else {
+            for (let key in data) {
+                log(key)
+                if (!data[key])
+                    continue;
+                user[key] = data[key]
+            }
+            log(user)
+            user.save().then((result) => {
+                // res.send(user)
+                res.redirect("/users/" + user.username)
+            }, (error) => {
+                res.status(400).send(error) // 400 for bad request
+            })
+        }
+    }).catch((error) => {
+        res.status(400).send(error)
+    })
+
 })
 /** end of User Routes **/
 
@@ -225,7 +308,7 @@ app.get('/listings/:id', (req, res) => {
                 description: listing.description,
                 images: listing.images,
                 username: req.session.username,
-                profilepic: 'https://csc309.blob.core.windows.net/swaphub/users/' + req.session.username,
+                // profilepic: 'https://csc309.blob.core.windows.net/swaphub/users/' + req.session.username,
                 isadmin: req.session.isAdmin
             };
             User.findOne({username: listing.username})

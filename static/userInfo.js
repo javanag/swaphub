@@ -35,99 +35,30 @@ UserInfo.prototype.addReview =
         return newReview;
     };
 
-UserInfo.prototype.addListing =
-    function (title, date, price, condition, category,
-              thumbnail, description, likes) {
-        const newListing = new Listing(
-            this.userName, this.profilePic, title, date,
-            price, condition, category,
-            thumbnail, description, likes);
-        this.userListings.push(newListing);
-        return newListing;
-    };
-
-UserInfo.prototype.userRate =
-    function () {
-        let sum = 0;
-        for (let i = 0; i < this.userReviews.length; i++) {
-            sum += this.userReviews[i].overallRating;
-        }
-        return sum / (this.userReviews.length);
-    };
-
-UserInfo.prototype.isPasswordMatch =
-    function (inputPwd) {
-        return inputPwd == this.password;
-    };
-// end of UserInfo default functions.
-
-
-//copied from script.js
-const Listing = function (username, profilePicture, title, date, price, condition, category, thumbnail, description, likes) {
-    this.username = username;
-    this.profilePicture = profilePicture;
-    this.title = title;
-    this.date = date;
-    this.price = price;
-    this.condition = condition;
-    this.category = category;
-    this.thumbnail = thumbnail;
-    this.description = description;
-    this.likes = likes;
+const userRate = function (user) {
+    let sum = 0;
+    for (let i = 0; i < user.userReviews.length; i++) {
+        sum += user.userReviews[i].overallRating;
+    }
+    return sum / (user.userReviews.length);
 };
 
+//Master function
+function createProfilePage() {
+    let isAdmin;
+    fetch("/api/users/" + sessUsername).then(res => res.json())
+        .then(user => isAdmin = user.isAdmin);
 
-//dummy data
-//user database on the server
-const userArray = [
-    new UserInfo('Chris P.', 'Bacon', 'smokyChris@yomamail.com', 'laflame92cactus', '1234321', 'travis_pp.jpg',),
-    new UserInfo('Mike', 'Litoris', 'cameltoe13@zee.com', 'gaspump2000', '1234321', 'lilpump_pp.jpg'),
-    new UserInfo('Ben', 'Dover', 'nosoap69@nohomo.com', 'bobbyandnotor', '1234321', 'logic_pp.jpeg',),
-];
-userArray[1].isAdmin = true;
-
-const userMap = {
-    "laflame92cactus": userArray[0],
-    "gaspump2000": userArray[1],
-    "bobbyandnotor": userArray[2]
-};
-
-//represents listings database on the server
-const allListings = [
-    new Listing('laflame92cactus', 'travis_pp.jpg', 'Adidas Yeezy 750 Boost', 'Oct 31, 2018', '2560.56', 'NEW', 'Fashion', 'yeezy750feet.jpg', 'New Yeezy 750 Boost signed by Kanye West. Size 13, comes in box, can provide receipt upon request.', 0),
-    //new Listing('gaspump2000', 'lilpump_pp.jpg', '(Very Rare) Basketball', 'Oct 27, 2018', '1000000', 'USED', 'Sports', 'basketball.jpeg', 'Ultra rare basketball used and signed by DROSE himself (not pictured). Willing to exchange for another Iced Out Rolex.', 0),
-    //new Listing('bobbyandnotor', 'logic_pp.jpeg', 'Minecraft PS3 Edition', 'Oct 15, 2018', '12', 'DAMAGED', 'Games', 'minecraft.jpg', 'Minecraft PS3 edition in case. Mild scratches on disk but fully functional.', 0),
-    //new Listing('bobbyandnotor', 'logic_pp.jpeg', 'Vintage Crime and Punishment', 'Oct 25, 2018', '40', 'USED', 'Books', 'dosto.png', 'My grandma gave me this ultra rare masterpiece.', 0),
-    //new Listing('laflame92cactus', 'travis_pp.jpg', '[SALE] My Mixtape', 'Oct 24, 2018', '10', 'NEW', 'Music', 'astroworld.jpg', 'Please everybody buy my tape I swear it\'s fire.', 0),
-    //new Listing('gaspump2000', 'lilpump_pp.jpg', 'BEST Aloe Plant', 'Oct 15, 2018', '5', 'USED', 'Plants & Animals', 'aloe.jpg', 'I usually only grow other types of plants, I\'ll let this go cheap.', 0),
-    //new Listing('bobbyandnotor', 'logic_pp.jpeg', '(Almost) New Ferrari!', 'Oct 10, 2018', '97000', 'USED', 'Vehicles', 'whip.jpeg', 'This is the fastest on the track hands down!', 0),
-    //new Listing('laflame92cactus', 'travis_pp.jpg', 'Broken Sunbeam Toaster', 'Sep 29, 2018', '2', 'DAMAGED', 'Furniture & Appliance', 'toaster.jpeg', 'For parts (bread not included, stop asking)', 0),
-];
-
-//each listing to its owner
-for (let i = 0; i < allListings.length; i++) {
-    let tempItem = allListings[i];
-    for (let j = 0; j < userArray.length; j++) {
-        if (tempItem.username == userArray[j].userName) {
-            userArray[j].userListings.push(tempItem);
-        }
-    }
+    fetch("/api/users/" + reqUsername).then(res => res.json())
+        .then(user => {
+            displayProfileInfo(user, isAdmin);
+            displayUserListings(user.userListings);
+            displayUserReviews(user.userReviews);
+        })
 }
-
-//create random reviews
-for (let j = 0; j < 2; j++) {
-    for (let i = 0; i < userArray.length; i++) {
-        let randWriter = userArray[Math.floor(Math.random() * 3)];
-        let randItem = Math.floor(Math.random() * userArray[i].userListings.length);
-        let randRate = Math.floor(Math.random() * 11) / 2.0;
-        userArray[i].addReview(randWriter, userArray[i].userListings[randItem], randRate,
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")
-    }
-}
-// end of dummy data
 
 //creates user's profile
-function createProfileView(userInfo, isAdmin) {
+function displayProfileInfo(userInfo, isAdmin) {
     console.log("Displaying user info...");
     const profileElement = document.createElement('div');
     profileElement.className = "row";
@@ -141,13 +72,13 @@ function createProfileView(userInfo, isAdmin) {
 
     const profilePicture = document.createElement('img');
     profilePicture.setAttribute('width', '150');
-    profilePicture.setAttribute('src', 'img/' + userInfo.profilePic);
+    profilePicture.setAttribute('src', userInfo.profilePic);
     profilePicture.classList.add('profilePic');
     profilePictureContainer.appendChild(profilePicture);
 
     const userName = document.createElement('div');
     userName.className = "text-muted text-center ";
-    userName.appendChild(document.createTextNode(userInfo.userName));
+    userName.appendChild(document.createTextNode(userInfo.username));
     profilePictureContainer.appendChild(userName);
 
     const profileInfo = document.createElement('div');
@@ -200,19 +131,20 @@ function createProfileView(userInfo, isAdmin) {
 
     const ratingVal = document.createElement('div');
     ratingVal.className = "form-control-plaintext";
-    ratingVal.innerText = userInfo.userRate();
+    ratingVal.innerText = userRate(userInfo);
     fieldValues.appendChild(ratingVal);
 
-    const editProfileBtn = document.createElement('button');
-    editProfileBtn.className = 'btn btn-outline-warning btn-block mt-3';
-    editProfileBtn.id = "editProfileButton";
-    editProfileBtn.setAttribute("type", "button");
-    editProfileBtn.innerText = "Edit Info";
-    profileInfo.appendChild(editProfileBtn);
+    if (isAdmin || sessUsername === reqUsername) {
+        const editProfileBtn = document.createElement('button');
+        editProfileBtn.className = 'btn btn-outline-warning btn-block mt-3';
+        editProfileBtn.id = "editProfileButton";
+        editProfileBtn.setAttribute("type", "button");
+        editProfileBtn.innerText = "Edit Info";
+        profileInfo.appendChild(editProfileBtn);
 
-    editProfileBtn.addEventListener("click", editProfileMode);
+        editProfileBtn.addEventListener("click", () => editProfileMode(userInfo));
 
-    if (admin){
+
         const deleteProfileBtn = document.createElement("button");
         deleteProfileBtn.className = 'btn btn-danger btn-block mt-3';
         deleteProfileBtn.id = "deleteProfileButton";
@@ -223,13 +155,20 @@ function createProfileView(userInfo, isAdmin) {
         deleteProfileBtn.addEventListener("click", function () {
             console.log("Deleting profile....")
             deleteProfileBtn.blur();
-            window.alert("Profile have been deleted!")
-            userInfoContainer.parentElement.removeChild(userInfoContainer);
+            fetch("/api/users/" + userInfo.id,
+                {method: 'delete'})
+                .then(user => {
+                    alert("Deleted: " + user.username);
+                    window.location.replace("/");
+                })
+                .catch((error) => {
+                    res.status(400).send(error)
+                })
         });
     }
 
     //Enter profile edit mode
-    function editProfileMode() {
+    function editProfileMode(userInfo) {
         const submitButton = document.createElement("button");
         submitButton.innerText = "Submit";
         submitButton.setAttribute("type", "submit");
@@ -238,42 +177,56 @@ function createProfileView(userInfo, isAdmin) {
         profileInfo.replaceChild(submitButton, editProfileBtn);
 
         const editForm = document.createElement("form");
-        editForm.setAttribute("name", "input");
+        // editForm.setAttribute("name", "input");
         editForm.setAttribute("id", "editForm");
         editForm.setAttribute("method", "post");
-        // editForm.setAttribute("action","javascript:;");
+        editForm.setAttribute("action", "/api/users/update/" + userInfo._id);
         // editForm.setAttribute ("onsubmit",updateInfo(this));
-        editForm.addEventListener("submit", updateInfo);
-        profileInfo.appendChild(editForm);
+        // editForm.addEventListener("submit", ()=>updateInfo(userInfo));
+        // const childs = profileInfo.child
+        fieldValues.prepend(editForm); //first child
+        // profileInfo.appendChild(editForm);
 
         const firstNameInput = document.createElement("input");
         firstNameInput.className = "form-control";
         firstNameInput.id = "firstNameInput";
         firstNameInput.setAttribute("type", "text");
-        firstNameInput.setAttribute("placeholder", userToDisplay.firstName);
-        fieldValues.replaceChild(firstNameInput, firstNameVal);
+        firstNameInput.setAttribute("placeholder", userInfo.firstName);
+        firstNameInput.setAttribute("name", "firstName");
+        fieldValues.removeChild(firstNameVal);
+        editForm.appendChild(firstNameInput);
+        // fieldValues.replaceChild(firstNameInput, firstNameVal);
 
         const lastNameInput = document.createElement("input");
         lastNameInput.className = "form-control";
         lastNameInput.id = "lastNameInput";
-        lastNameInput.setAttribute("placeholder", userToDisplay.lastName);
-        fieldValues.replaceChild(lastNameInput, lastNameVal);
+        lastNameInput.setAttribute("placeholder", userInfo.lastName);
+        lastNameInput.setAttribute("name", "lastName");
+        // fieldValues.replaceChild(lastNameInput, lastNameVal);
+        fieldValues.removeChild(lastNameVal);
+        editForm.appendChild(lastNameInput);
 
         const emailInput = document.createElement("input");
         emailInput.className = "form-control";
         emailInput.id = "emailInput";
-        emailInput.setAttribute("placeholder", userToDisplay.email);
-        fieldValues.replaceChild(emailInput, emailVal);
+        emailInput.setAttribute("placeholder", userInfo.email);
+        emailInput.setAttribute("name", "email");
+        // fieldValues.replaceChild(emailInput, emailVal);
+        fieldValues.removeChild(emailVal);
+        editForm.appendChild(emailInput);
 
         const passwordInput = document.createElement("input");
         passwordInput.className = "form-control";
         passwordInput.id = "passwordInput";
-        passwordInput.setAttribute("placeholder", "*".repeat(userToDisplay.password.length));
-        fieldValues.replaceChild(passwordInput, ratingVal);
-        const password = document.createElement('div');
-        password.className = "form-control-plaintext";
-        password.innerText = "Password:";
-        fieldKeys.replaceChild(password, rating);
+        passwordInput.setAttribute("placeholder", "*".repeat(userInfo.password.length));
+        passwordInput.setAttribute("name", "password");
+        // fieldValues.replaceChild(passwordInput, ratingVal);
+        fieldValues.removeChild(ratingVal);
+        editForm.appendChild(passwordInput);
+        const passwordLabel = document.createElement('div');
+        passwordLabel.className = "form-control-plaintext";
+        passwordLabel.innerText = "Password:";
+        fieldKeys.replaceChild(passwordLabel, rating);
     }
 
     //updates the profileView and object.
@@ -296,7 +249,7 @@ function createProfileView(userInfo, isAdmin) {
 
         // profileInfo.replaceChild(editProfileBtn, submitButton);
         userInfoContainer.removeChild(profileElement);
-        createProfileView(userToDisplay, );
+        createProfileView(userToDisplay,);
     }
 }
 
@@ -331,9 +284,9 @@ function createListingDOM(listing) {
     title.classList.add('text-center');
 
     const titleLink = document.createElement('a');
-    if(admin){
+    if (admin) {
         titleLink.setAttribute('href', 'yeezyListing_admin.html');//TODO:
-    }else{
+    } else {
         titleLink.setAttribute('href', 'yeezyListing.html');//TODO:
     }
     titleLink.classList.add('listingTitleLink');
@@ -368,9 +321,9 @@ function createListingDOM(listing) {
     category.appendChild(document.createTextNode('in '));
     const categoryLink = document.createElement('a');
     categoryLink.appendChild(document.createTextNode(listing.category));
-    if(admin){
+    if (admin) {
         categoryLink.setAttribute('href', 'listings_admin.html');//TODO:
-    }else{
+    } else {
         categoryLink.setAttribute('href', 'listings.html');//TODO:
     }
     category.appendChild(categoryLink);
@@ -392,9 +345,9 @@ function createListingDOM(listing) {
     image.setAttribute('src', 'img/' + listing.thumbnail);
 
     const imageLinkToListing = document.createElement('a');
-    if(admin){
+    if (admin) {
         imageLinkToListing.setAttribute('href', 'yeezyListing_admin.html');//TODO:
-    }else{
+    } else {
         imageLinkToListing.setAttribute('href', 'yeezyListing.html');//TODO:
     }
     imageLinkToListing.appendChild(image);
@@ -462,9 +415,9 @@ function createReviewDOM(review) {
     title.classList.add('text-center');
 
     const titleLink = document.createElement('a');
-    if(admin){
+    if (admin) {
         titleLink.setAttribute('href', 'yeezyListing_admin.html');
-    }else{
+    } else {
         titleLink.setAttribute('href', 'yeezyListing.html');
     }
     titleLink.classList.add('listingTitleLink');
@@ -494,11 +447,11 @@ function createReviewDOM(review) {
     return reviewElement;
 }
 
-let userToDisplay;
-if (!location.hash)
-//randomizing for fun
-    userToDisplay = userArray[Math.floor(Math.random() * 3)];
-else {
-    let urlHash = location.hash.substr(1);
-    userToDisplay = userMap[urlHash];
-}
+// let userToDisplay;
+// if (!location.hash)
+// //randomizing for fun
+//     userToDisplay = userArray[Math.floor(Math.random() * 3)];
+// else {
+//     let urlHash = location.hash.substr(1);
+//     userToDisplay = userMap[urlHash];
+// }
