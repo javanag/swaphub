@@ -240,7 +240,7 @@ function createListingDOM(listing) {
 
 function deleteListing(e) {
     const listingEle = e.target.parentNode;
-    fetch("/listings/" + listingEle.id,
+    fetch("/api/listings/" + listingEle.id,
         {method: 'delete'})
         .then(listing => {
             console.log("Deleted: " + listingEle.id);
