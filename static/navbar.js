@@ -99,7 +99,7 @@ function createNavbar(siteView, loggedIn = true) {
     // Logo
     const logoText = document.createElement('a');
     logoText.className = "navbar-brand text-white";
-    logoText.setAttribute('href', '#');
+    logoText.setAttribute('href', '/');
     logoText.innerHTML = 'Swap <span class="orange">Hub';
     navContainer.appendChild(logoText);
     // nav-item button
