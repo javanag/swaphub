@@ -49,6 +49,9 @@ document.addEventListener('DOMContentLoaded', function () {
     conditionDOM = document.querySelector('#itemCondText');
     listingInfo = document.querySelector('#listingInfo');
 
+    let carousel = document.querySelector('#carouselImageArray');
+    carousel.querySelectorAll('div')[0].classList.add('active');
+
     setCondition();
 });
 
