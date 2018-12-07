@@ -29,7 +29,7 @@ const
         {name: 'thumbnail', maxCount: 1},
         {name: 'images', maxCount: 5}
     ])
-
+    , signUploadStrategy = multer({storage: inMemoryStorage}).single("profilePic")
     , azureStorage = require('azure-storage')
     ,
     blobService = azureStorage.createBlobService("DefaultEndpointsProtocol=https;AccountName=csc309;AccountKey=mQsLsREx0NQO3YrnWTjzzYpJ/t0zHzh3cMTs1GBc6/i0edJb2jfcFWCFxnFlamPtFEyddrG+WWhZ08wE8wV6wQ==;EndpointSuffix=core.windows.net")
@@ -97,12 +97,13 @@ app.get('/login', sessionChecker, (req, res) => {
 
 
 app.get('/', (req, res) => {
-    // check if we have an active session
-    if (req.session.user) {
-        res.redirect('/listings/')
-    } else {
-        res.redirect('/login/')
-    }
+    // // check if we have an active session
+    // if (req.session.user) {
+    //     res.redirect('/listings/')
+    // } else {
+    //     res.redirect('/login/')
+    // }
+    res.redirect('/listings/')
 })
 
 
@@ -157,7 +158,7 @@ app.get('/users/:username', (req, res) => {
 })
 
 /** User routes **/
-app.post('/users', (req, res) => {
+app.post('/api/users', (req, res) => {
 
     // Create a new user
     const user = new User({
@@ -168,6 +169,41 @@ app.post('/users', (req, res) => {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         profilePic: imageBaseURL + "/users/" + req.body.profilePic,
+    })
+
+    // save user to database
+    user.save().then((result) => {
+        res.send(user)
+    }, (error) => {
+        res.status(400).send(error) // 400 for bad request
+    })
+
+})
+
+app.post('/users/signup', signUploadStrategy, (req, res) => {
+    // Create a new user
+    const image = req.file;
+
+    const
+        blobName = "/users/" + image.originalname
+        , stream = getStream(image.buffer)
+        , streamLength = image.buffer.length
+    ;
+    blobService.createBlockBlobFromStream(containerName, blobName, stream, streamLength, err => {
+        if (err) {
+            handleError(err);
+            return;
+        }
+    });
+
+    const user = new User({
+        username: req.body.username,
+        password: req.body.password,
+        email: req.body.email,
+        isAdmin: req.body.isAdmin,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        profilePic: imageBaseURL + blobName,
     })
 
     // save user to database
