@@ -68,8 +68,6 @@ const navItems = {
             itemsArray.push(document.createElement('li'));
             itemsArray[i].className = "nav-item";
             itemsArray[i].innerHTML = '<a class="nav-link" href="#"></a>';
-
-            ulContainer.appendChild(itemsArray[i]);
         }
         const currView = document.createElement('span');
         currView.className = "sr-only";
@@ -91,9 +89,11 @@ const navItems = {
         // About
         itemsArray[2].firstChild.innerText = "About";
         if (index) {
-            itemsArray[0].firstChild.setAttribute("href", "#");
-            itemsArray[1].firstChild.setAttribute("href", "#");
-            itemsArray[2].firstChild.setAttribute("href", "#");
+            itemsArray.splice(1, 1);
+        }
+
+        for (let i = 0; i < itemsArray.length; i++) {
+            ulContainer.appendChild(itemsArray[i]);
         }
     },
 };
@@ -186,7 +186,7 @@ function createNavbar(siteView, loggedIn = true) {
         loginButton.setAttribute("role", "button");
         loginButton.setAttribute("href", "/login");
         loginButton.setAttribute("id", "loginButton");
-        loginButton.innerText = "Login";
+        loginButton.innerText = "Login / Signup";
         endContainer.appendChild(loginButton);
     }
 

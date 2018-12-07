@@ -58,6 +58,7 @@ app.set('views', __dirname + '/template');
 
 app.use('/listings', express.static('static'));
 app.use('/sell', express.static('static'));
+app.use('/login', express.static('static'));
 
 // body-parser middleware setup.  Will parse the JSON and convert to object
 app.use(bodyParser.json());
@@ -90,7 +91,7 @@ app.use('/public', express.static(__dirname + '/public'));
 
 // route for user login page
 app.get('/login', sessionChecker, (req, res) => {
-    res.sendFile(__dirname + '/public/app/index.html')
+    res.render('login');
 })
 
 
@@ -106,6 +107,7 @@ app.get('/', (req, res) => {
 
 // Routes for logging in and logging out users
 
+//Data modification
 app.post('/users/login', (req, res) => {
     const username = req.body.username
     const password = req.body.password
