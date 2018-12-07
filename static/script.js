@@ -124,7 +124,7 @@ function createListingDOM(listing) {
     const profilePictureContainer = document.createElement('div');
     profilePictureContainer.classList.add('d-inline-block');
     //Find listing's user:
-    fetch("/users/" + listing.username).then(res => res.json())
+    fetch("/api/users/" + listing.username).then(res => res.json())
         .then(user => {
             profilePicture.setAttribute('src', user.profilePic);
         })
@@ -145,7 +145,7 @@ function createListingDOM(listing) {
     if (adminMode) {
         profileLink.setAttribute('href', 'profile_admin.html#' + listing.username);//TODO:
     } else {
-        profileLink.setAttribute('href', 'profile.html#' + listing.username);//TODO:
+        profileLink.setAttribute('href', '/users/' + listing.username);//TODO:
     }
     profileLink.appendChild(document.createTextNode(listing.username));
 

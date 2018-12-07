@@ -157,14 +157,14 @@ function createNavbar(siteView, loggedIn = true) {
         if (currentUserName == 'gaspump2000') {
             profilePic.setAttribute("href", "/public/app/profile_admin.html#" + currentUserName);
         } else {
-            profilePic.setAttribute("href", "/public/app/profile.html#" + currentUserName);
+            profilePic.setAttribute("href", "/users/" + currentUserName);
         }
         profilePicContainer.appendChild(profilePic);
         const profileImg = document.createElement('img');
         profileImg.className = "profilePic";
         profileImg.setAttribute("width", "40");
         //fetch userImage:
-        fetch("/users/" + currentUserName).then(res => res.json())
+        fetch("/api/users/" + currentUserName).then(res => res.json())
             .then(user => {
                 profileImg.setAttribute("src", user.profilePic);
             })
