@@ -247,10 +247,9 @@ app.delete('/api/users/:id', (req, res) => {
             res.status(404).send()
         } else {
             Listing.remove({
-                id: {
-                    $in: user.userListings.map(
-                        (listing) => ObjectID(listing.id))
-                }
+                '_id': {$in: user.userListings}
+            }).catch((error) => {
+                res.status(400).send(error)
             });
             res.send(user)
         }

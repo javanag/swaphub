@@ -132,7 +132,8 @@ function displayProfileInfo(userInfo, isAdmin) {
 
     const ratingVal = document.createElement('div');
     ratingVal.className = "form-control-plaintext";
-    ratingVal.innerText = userRate(userInfo);
+    // ratingVal.innerText = userRate(userInfo);
+    ratingVal.innerText = "4" //TODO: fix
     fieldValues.appendChild(ratingVal);
 
     if (isAdmin || sessUsername === reqUsername) {
@@ -156,11 +157,11 @@ function displayProfileInfo(userInfo, isAdmin) {
         deleteProfileBtn.addEventListener("click", function () {
             console.log("Deleting profile....")
             deleteProfileBtn.blur();
-            fetch("/api/users/" + userInfo.id,
+            fetch("/api/users/" + userInfo._id,
                 {method: 'delete'})
                 .then(user => {
-                    alert("Deleted: " + user.username);
-                    window.location.replace("/");
+                    alert("Deleted: " + userInfo.username);
+                    window.location.replace("/users/logout");
                 })
                 .catch((error) => {
                     res.status(400).send(error)
