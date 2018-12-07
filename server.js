@@ -7,7 +7,7 @@ const bodyParser = require('body-parser') // middleware for parsing HTTP body fr
 const session = require('express-session')
 const {ObjectID} = require('mongodb')
 const date = require('date-and-time');
-const imageBaseURL = "https://csc309.blob.core.windows.net/swaphub"
+const imageBaseURL = "https://csc309.blob.core.windows.net/swaphub/"
 
 // Import our mongoose connection
 const {mongoose} = require('./db/mongoose');
@@ -167,7 +167,7 @@ app.post('/api/users', (req, res) => {
         isAdmin: req.body.isAdmin,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        profilePic: imageBaseURL + "/users/" + req.body.profilePic,
+        profilePic: imageBaseURL + "users/" + req.body.profilePic,
     })
 
     // save user to database
@@ -184,7 +184,7 @@ app.post('/users/signup', signUploadStrategy, (req, res) => {
     const image = req.file;
 
     const
-        blobName = "/users/" + image.originalname
+        blobName = "users/" + image.originalname
         , stream = getStream(image.buffer)
         , streamLength = image.buffer.length
     ;
@@ -207,7 +207,11 @@ app.post('/users/signup', signUploadStrategy, (req, res) => {
 
     // save user to database
     user.save().then((result) => {
-        res.send(user)
+        // res.send(user)
+        req.session.user = result._id;
+        req.session.username = result.username;
+        req.session.isAdmin = result.isAdmin;
+        res.redirect("/")
     }, (error) => {
         res.status(400).send(error) // 400 for bad request
     })
@@ -443,8 +447,8 @@ app.post('/api/listings', uploadStrategy, (req, res) => {
         price: req.body.price,
         condition: req.body.condition,
         category: req.body.category,
-        thumbnail: imageBaseURL + "/listings/" + thumbnailFile.originalname,
-        images: imagesFile.map((image) => imageBaseURL + "/listings/" + image.originalname),
+        thumbnail: imageBaseURL + "listings/" + thumbnailFile.originalname,
+        images: imagesFile.map((image) => imageBaseURL + "listings/" + image.originalname),
         description: req.body.description,
         likes: 0
     });
@@ -453,7 +457,7 @@ app.post('/api/listings', uploadStrategy, (req, res) => {
     // save listing to database
     listing.save().then((result) => {
         // res.send(listing)
-        log(result)
+        // log(result)
         User.findById(req.session.user).then((user) => {
             user.userListings.push(result._id)
             user.save()
