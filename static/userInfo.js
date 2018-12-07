@@ -284,11 +284,7 @@ function createListingDOM(listing) {
     title.classList.add('text-center');
 
     const titleLink = document.createElement('a');
-    if (admin) {
-        titleLink.setAttribute('href', 'yeezyListing_admin.html');//TODO:
-    } else {
-        titleLink.setAttribute('href', 'yeezyListing.html');//TODO:
-    }
+    titleLink.setAttribute('href', '/listings/' + listing.id);//TODO:
     titleLink.classList.add('listingTitleLink');
 
     const titleLinkH5 = document.createElement('h5');
@@ -321,11 +317,7 @@ function createListingDOM(listing) {
     category.appendChild(document.createTextNode('in '));
     const categoryLink = document.createElement('a');
     categoryLink.appendChild(document.createTextNode(listing.category));
-    if (admin) {
-        categoryLink.setAttribute('href', 'listings_admin.html');//TODO:
-    } else {
-        categoryLink.setAttribute('href', 'listings.html');//TODO:
-    }
+    categoryLink.setAttribute('href', '/listings');//TODO:
     category.appendChild(categoryLink);
 
     detailsUl.appendChild(price);
@@ -342,14 +334,10 @@ function createListingDOM(listing) {
 
     const image = document.createElement('img');
     image.classList.add('listingImage');
-    image.setAttribute('src', 'img/' + listing.thumbnail);
+    image.setAttribute('src', listing.thumbnail);
 
     const imageLinkToListing = document.createElement('a');
-    if (admin) {
-        imageLinkToListing.setAttribute('href', 'yeezyListing_admin.html');//TODO:
-    } else {
-        imageLinkToListing.setAttribute('href', 'yeezyListing.html');//TODO:
-    }
+    imageLinkToListing.setAttribute('href', '/listings/' + listing._id);//TODO:
     imageLinkToListing.appendChild(image);
 
     imageContainer.appendChild(imageLinkToListing);

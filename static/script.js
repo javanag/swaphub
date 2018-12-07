@@ -210,7 +210,7 @@ function createListingDOM(listing) {
     image.setAttribute('src', listing.thumbnail);
 
     const imageLinkToListing = document.createElement('a');
-    imageLinkToListing.setAttribute('href', '#');//TODO:
+    imageLinkToListing.setAttribute('href', '/listings/' +listing._id);//TODO:
     imageLinkToListing.appendChild(image);
 
     imageContainer.appendChild(imageLinkToListing);
