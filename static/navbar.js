@@ -76,13 +76,7 @@ const navItems = {
         itemsArray[0].firstChild.innerText = "Listings";
         itemsArray[0].setAttribute("id", "listingNavLink");
         itemsArray[0].firstChild.setAttribute("href", "/listings/");
-        /*
-        if(currentUserName == 'gaspump2000'){
-            itemsArray[0].firstChild.setAttribute("href", "/public/app/listings_admin.html");
-        }else{
-            itemsArray[0].firstChild.setAttribute("href", "/public/app/listings.html");
-        }
-        */
+
         // Sell
         itemsArray[1].firstChild.innerText = "Sell";
         itemsArray[1].firstChild.setAttribute("href", "/sell/");

@@ -303,10 +303,11 @@ app.get('/listings', (req, res) => {
 })
 
 app.get('/sell', (req, res) => {
-    if (req.session.username) {
+
+    if (req.session.user) {
         res.render("add_listing", req.session);
     } else {
-        res.render("add_listing");
+        res.redirect("/login");
     }
 })
 
