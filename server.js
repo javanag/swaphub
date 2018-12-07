@@ -416,11 +416,19 @@ app.post('/api/listings', uploadStrategy, (req, res) => {
         images: imagesFile.map((image) => imageBaseURL + "/listings/" + image.originalname),
         description: req.body.description,
         likes: 0
-    })
+    });
+
     // log(listing)
     // save listing to database
     listing.save().then((result) => {
         // res.send(listing)
+        log(result)
+        User.findById(req.session.user).then((user) => {
+            user.userListings.push(result)
+            user.save()
+        }).catch((error) => {
+            res.status(400).send(error)
+        })
         res.redirect("/listings")
     }, (error) => {
         res.status(400).send(error) // 400 for bad request
