@@ -62,7 +62,7 @@ app.use('/sell', express.static('static'));
 // body-parser middleware setup.  Will parse the JSON and convert to object
 app.use(bodyParser.json());
 // parse incoming parameters to req.body
-app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.urlencoded({extended: true}));
 
 // session
 app.use(session({
@@ -221,10 +221,7 @@ app.get('/listings/:id', (req, res) => {
                 price: listing.price,
                 date: date.format(new Date(listing.date), 'MMM D[,] YYYY'),
                 description: listing.description,
-                images: [
-                    {demoimgurl: 'img/yeezy750.jpg'},
-                    {demoimgurl: 'img/yeezy750feet.jpg'},
-                ],
+                images: listing.images,
                 username: req.session.username,
                 profilepic: 'https://csc309.blob.core.windows.net/swaphub/users/' + req.session.username,
                 isadmin: req.session.isAdmin
@@ -271,7 +268,7 @@ app.post('/api/listings', uploadStrategy, (req, res) => {
     imagesFile.push(thumbnailFile);
 
     imagesFile.forEach((file) => {
-        log(file);
+        // log(file);
         const
             blobName = "listings/" + file.originalname
             , stream = getStream(file.buffer)
@@ -298,7 +295,7 @@ app.post('/api/listings', uploadStrategy, (req, res) => {
         description: req.body.description,
         likes: 0
     })
-    log(listing)
+    // log(listing)
     // save listing to database
     listing.save().then((result) => {
         // res.send(listing)
