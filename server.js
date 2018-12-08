@@ -194,8 +194,12 @@ app.post('/api/messages/:receiverId', (req, res) => {
 
     // save user to database
     message.save().then((result) => {
-        log(result)
-        res.send(result)
+        Message.populate(result, "sender")
+            .then((msg) => {
+            log(msg)
+            res.send(msg)
+        }).catch((error) => res.status(400).send(error))
+
         // res.redirect("/messages")
     }, (error) => {
         log("error in saving msg")

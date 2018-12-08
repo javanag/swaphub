@@ -110,7 +110,8 @@ function renderConversationMessages(event) {
     for (let i = 0; i < conversation.length; i++) {
         const message = renderMessage(conversation[i]);
         if (i == conversation.length - 1) {
-            message.classList.add('mb-4');
+            message.id = "lastMsg"
+            message.classList.add('mb-5');
         }
         messagesContainer.appendChild(message);
     }
@@ -143,18 +144,17 @@ function renderConversationMessages(event) {
 
     messagesContainer.appendChild(chatForm);
     // sendButton.addEventListener("click", (e)=> e.preventDefault())
-    chatForm.addEventListener("submit", (e) => {
-        e.preventDefault()
-        return sendMessage(e, messageInput.value, otherUserID)
-    })
+    sendButton.addEventListener("click", (e) =>
+        sendMessage(e, messageInput, otherUserID)
+    )
 }
 
-function sendMessage(e, msgContent, otherUserID) {
+async function sendMessage(e, messageInput, otherUserID) {
     e.preventDefault();
     // const msgContent = messageInput.value
     // console.log(msgContent)
-    const data = {content: msgContent};
-    fetch("/api/messages/" + otherUserID, {
+    const data = {content: messageInput.value};
+    await fetch("/api/messages/" + otherUserID, {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
@@ -162,27 +162,33 @@ function sendMessage(e, msgContent, otherUserID) {
         }
     })
         .then(res => {
-        if (res.status === 200)
-            return res.json()
-        else
-            console.log("ERROR")
-    })
+            if (res.status === 200)
+                return res.json()
+            else
+                console.log("ERROR")
+        })
         .then(msg => {
-            console.log("Appending new msg..")
+            console.log("Appending new msg..", msg)
             const message = renderMessage(msg);
-            messagesContainer.appendChild(message);
+            const oldLastMsg = document.getElementById("lastMsg")
+            oldLastMsg.id = ""
+            oldLastMsg.classList.remove("mb-4")
+            message.classList.add("mb-5");
+            message.id = "lastMsg"
+            messagesContainer.insertBefore(message, messagesContainer.lastChild)
+            messageInput.value = "" //submit listener fix
         })
         .catch((error) => {
             console.log(otherUserID)
-            console.log("ERROR ",error)
+            console.log("ERROR ", error)
         })
 
 }
 
 function renderMessage(message) {
     const container = document.createElement('div');
-
-    if (message.sender.username == currentUser) {
+    console.log(message.sender.username, "=", currentUser)
+    if (message.sender.username === currentUser) {
         container.className = 'w-50 rounded mb-1 mt-1 mr-2 p-1 bg-warning text-left chatIndent';
     } else {
         container.className = 'w-50 rounded m-2 mt-1 mb-1 p-1 bg-dark text-white text-left';
