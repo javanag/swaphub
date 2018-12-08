@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalBody = document.getElementById("modalBody");
     const modalFooter = document.querySelector(".modal-footer");
     const bidForm = document.createElement("form");
+    bidForm.id = "bidForm"
     // region bidForm
     const formGrp = document.createElement("div");
     formGrp.className = "form-group row";
@@ -72,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const bidSubmit = document.createElement("button");
     bidSubmit.className = "btn btn-primary";
     bidSubmit.setAttribute("type", "submit");
+    bidSubmit.setAttribute("form", "bidForm")
     bidSubmit.innerText = "Submit"
 
     let carousel = document.querySelector('#carouselImageArray');
@@ -85,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
         modalBody.appendChild(bidForm)
         modalFooter.appendChild(bidSubmit)
     });
-    bidSubmit.addEventListener("click", (e) => {
+    bidForm.addEventListener("submit", (e) => {
         e.preventDefault();
         modalBody.removeChild(bidForm)
         modalFooter.removeChild(bidSubmit)

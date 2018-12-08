@@ -15,6 +15,7 @@ const {mongoose} = require('./db/mongoose');
 // Import the models
 const {User} = require('./models/user')
 const {Listing} = require('./models/listing')
+const {Message} = require('./models/message')
 
 
 // express
@@ -87,6 +88,23 @@ const sessionChecker = (req, res, next) => {
     } else {
         next()
     }
+};
+// Authentication for student resource routes
+const authenticate = (req, res, next) => {
+    if (req.session.user) {
+        User.findById(req.session.user).then((user) => {
+            if (!user) {
+                return Promise.reject()
+            } else {
+                req.user = user
+                next()
+            }
+        }).catch((error) => {
+            res.redirect('/login')
+        })
+    } else {
+        res.redirect('/login')
+    }
 }
 // static route to public folder
 app.use('/public', express.static(__dirname + '/public'));
@@ -147,6 +165,44 @@ app.get('/messages', (req, res) => {
         res.redirect("/login");
     }
 })
+app.get('/api/messages', authenticate, (req, res) => {
+    Message.find().or([{sender: req.user._id}, {receiver: req.user._id}])
+        .populate('sender').populate('receiver')
+        .then((messages) => {
+            res.send(messages)
+        }, (error) => {
+            res.status(400).send(error)
+        }).catch((error) => res.status(400).send(error))
+
+});
+
+app.post('/api/messages/:receiverId', (req, res) => {
+    const receiverID = req.params.receiverId;
+
+    if (!ObjectID.isValid(receiverID)) {
+        log("ID not valid")
+        return res.status(404).send()
+    }
+    // Create a new message
+    const message = new Message({
+        sender: req.session.user,
+        receiver: receiverID,
+        read: true,
+        content: req.body.content,
+        date: new Date()
+    })
+
+    // save user to database
+    message.save().then((result) => {
+        log(result)
+        res.send(result)
+        // res.redirect("/messages")
+    }, (error) => {
+        log("error in saving msg")
+        res.status(400).send(error) // 400 for bad request
+    })
+
+})
 
 // Display user for given username
 app.get('/users/:username', (req, res) => {
@@ -190,7 +246,6 @@ app.post('/api/users', (req, res) => {
     })
 
 })
-
 
 
 app.post('/users/signup', signUploadStrategy, (req, res) => {
@@ -509,7 +564,6 @@ app.delete('/api/listings/:id', (req, res) => {
 app.post('/api/offer/:id', (req, res) => {
     const id = req.params.id // the id is in the req.params object
 
-
     // Good practise is to validate the id
     if (!ObjectID.isValid(id)) {
         return res.status(404).send()
@@ -535,6 +589,7 @@ app.post('/api/offer/:id', (req, res) => {
         res.status(400).send(error)
     })
 })
+
 // endregion Listing Routes
 
 app.listen(port, () => {
