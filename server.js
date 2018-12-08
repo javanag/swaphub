@@ -499,7 +499,8 @@ app.post('/api/offer/:id', (req, res) => {
     }
     const offer = {
         bidder: req.session.user,
-        bid: parseFloat(req.body.offerBid)
+        bid: parseFloat(req.body.offerBid),
+        date: Date.now()
     }
     // Otheriwse, findById
     Listing.findById(id).then((listing) => {

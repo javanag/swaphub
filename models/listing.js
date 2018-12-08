@@ -19,7 +19,8 @@ const ListingSchema = new mongoose.Schema({
     likes: Number,
     offers: [{
         bidder: { type: ObjectID, ref: 'User' },
-        bid: Number
+        bid: Number,
+        date: Date
     }]
 })
 
