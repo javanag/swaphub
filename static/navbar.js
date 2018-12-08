@@ -163,6 +163,12 @@ function createNavbar(siteView, loggedIn = true) {
         profilePic.appendChild(document.createTextNode("@" + currentUserName));
         endContainer.appendChild(profilePicContainer);
 
+        const messageButton = document.createElement('a');
+        messageButton.className = 'btn btn-link text-white pl-3 dm-button';
+        messageButton.appendChild(document.createTextNode('\u2709'));
+        messageButton.setAttribute('href', '/messages/');
+        endContainer.appendChild(messageButton);
+
         const logoutButton = document.createElement('a');
         logoutButton.className = "btn btn-outline-danger my-2 my-sm-0 ml-3";
         logoutButton.setAttribute("role", "button");

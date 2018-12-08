@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Messages on SwapHub</title>
+
+    <link rel="shortcut icon" href="public/app/img/logic_pp.jpeg"> <!--todo: title icon-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link rel="shortcut icon" href="favicon.ico">
+</head>
+<body class="bg-light h-100" id="chatBody">
+<!--Reusable navbar-->
+<script type="text/javascript" src="navbar.js"></script>
+<script>
+        {{#username}}
+        setupNavbarUser("{{username}}", "{{username}}.jpg");
+        createNavbar("profile");
+        {{/username}}
+</script>
+<!--Reusable navbar ends-->
+<div class="container-fluid w-100 p-0" id="parentContainer">
+    <div class="float-left h-100 w-25 border-right" id="userContainer">
+        <div class="w-100 p-3 text-center border-bottom"><h4>Conversations</h4></div>
+    </div>
+    <div id="conversationContainer" class="h-100">
+        <div id="convoPartnerTitle" class="w-100 p-3 text-center border-bottom"><h4> </h4></div>
+    </div>
+</div>
+
+<script type="text/javascript" src="messages.js"></script>
+</body>
+</html>

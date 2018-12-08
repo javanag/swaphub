@@ -60,6 +60,7 @@ app.use('/listings', express.static('static'));
 app.use('/users', express.static('static'));
 app.use('/sell', express.static('static'));
 app.use('/login', express.static('static'));
+app.use('/messages', express.static('static'));
 
 // body-parser middleware setup.  Will parse the JSON and convert to object
 app.use(bodyParser.json());
@@ -136,6 +137,17 @@ app.get('/users/logout', (req, res) => {
     })
 })
 
+//load messages page:
+app.get('/messages', (req, res) => {
+    if (req.session.user) {
+        res.render("messages", {
+            username: req.session.username
+        });
+    } else {
+        res.redirect("/login");
+    }
+})
+
 // Display user for given username
 app.get('/users/:username', (req, res) => {
     const requestedUsername = req.params.username; // the id is in the req.params object
@@ -178,6 +190,8 @@ app.post('/api/users', (req, res) => {
     })
 
 })
+
+
 
 app.post('/users/signup', signUploadStrategy, (req, res) => {
     // Create a new user

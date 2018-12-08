@@ -121,4 +121,32 @@ html {
     margin-bottom: 30px;
 }
 
+#parentContainer {
+    height: 100vh;
+    margin-top: -75px;
+}
+
+#userContainer {
+    padding-top:  75px;
+    overflow-y: scroll;
+}
+
+#conversationContainer {
+    padding-top:  75px;
+    overflow-y: scroll;
+}
+
+.chatIndent {
+    margin-left: 50%;
+}
+
+.chatForm {
+    position: fixed;
+    bottom: -33px;
+}
+
+.dm-button{
+    font-size: 22px;
+    margin-right: -10px;
+}
 /*end of login style*/
