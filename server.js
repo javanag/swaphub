@@ -380,29 +380,32 @@ app.get('/listings/:id', (req, res) => {
     }
 
     // Otheriwse, findById
-    Listing.findById(id).then((listing) => {
-        if (!listing) {
-            res.status(404).send()
-        } else {
-            const data = {
-                id: listing.id,
-                title: listing.title,
-                condition: listing.condition,
-                poster: listing.username,
-                price: listing.price,
-                date: date.format(new Date(listing.date), 'MMM D[,] YYYY'),
-                description: listing.description,
-                images: listing.images,
-                username: req.session.username,
-                isadmin: req.session.isAdmin
-            };
-            User.findOne({username: listing.username})
-                .then((user) => data["poster_profilepic"] = user.profilePic)
-                .then(() => res.render("listing_template", data))
+    Listing.findById(id).populate('offers.bidder')
+        .then((listing) => {
+            log(listing)
+            if (!listing) {
+                res.status(404).send()
+            } else {
+                const data = {
+                    id: listing.id,
+                    title: listing.title,
+                    condition: listing.condition,
+                    poster: listing.username,
+                    price: listing.price,
+                    date: date.format(new Date(listing.date), 'MMM D[,] YYYY'),
+                    description: listing.description,
+                    images: listing.images,
+                    username: req.session.username,
+                    isadmin: req.session.isAdmin,
+                    offers: listing.offers
+                };
+                User.findOne({username: listing.username})
+                    .then((user) => data["poster_profilepic"] = user.profilePic)
+                    .then(() => res.render("listing_template", data))
 
-        }
+            }
 
-    }).catch((error) => {
+        }).catch((error) => {
         res.status(400).send(error)
     })
 })
@@ -498,6 +501,36 @@ app.delete('/api/listings/:id', (req, res) => {
         } else {
             res.send(listing)
         }
+    }).catch((error) => {
+        res.status(400).send(error)
+    })
+})
+
+app.post('/api/offer/:id', (req, res) => {
+    const id = req.params.id // the id is in the req.params object
+
+
+    // Good practise is to validate the id
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send()
+    }
+    const offer = {
+        bidder: req.session.user,
+        bid: parseFloat(req.body.offerBid),
+        date: Date.now()
+    }
+    // Otheriwse, findById
+    Listing.findById(id).then((listing) => {
+        if (!listing) {
+            res.status(404).send()
+        } else {
+            listing.offers.push(offer);
+            listing.save()
+                .then((result) => res.send(result),
+                    (error) => res.status(400).send(error));
+            log(listing)
+        }
+
     }).catch((error) => {
         res.status(400).send(error)
     })
