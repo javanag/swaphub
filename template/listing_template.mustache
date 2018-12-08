@@ -19,11 +19,11 @@
         {{#username}}
         setupNavbarUser("{{username}}", "{{username}}.jpg");
         createNavbar("profile");
-        const id = "{{id}}";
         {{/username}}
         {{^username}}
         createNavbar("profile", false);
         {{/username}}
+    const listingId = "{{id}}";
 </script>
 <!--Reusable navbar ends-->
 <div class="container">
@@ -44,7 +44,7 @@
                             {{/images}}
                             {{^images}}
                                 <div id="noimages" class="carousel-item active text-center vertical-center">
-                                    <h2 class="text-center vertical-center">No images available.<h2>
+                                    <h2 class="text-center vertical-center">No images available.</h2>
                                 </div>
                             {{/images}}
                         </div>
@@ -99,16 +99,21 @@
                     </li>
                 </ul>
             </div>
-            {{#isadmin}}
+            {{#canDel}}
                 <button id="delete-listing" class="btn btn-outline-danger w-100">Delete</button>
-            {{/isadmin}}
+                <script>
+                    const deleteButton = document.getElementById("delete-listing");
+                    deleteButton.addEventListener("click", deleteListing);
+                </script>
+            {{/canDel}}
         </div>
 
     </div>
 </div>
 
 <!-- Form Modal -->
-<div id="formModal" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+<div id="formModal" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog"
+     aria-labelledby="mySmallModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -122,7 +127,7 @@
             </div>
             <div class="modal-footer">
                 <button id="modalCloseBtn" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                
+
             </div>
         </div>
     </div>

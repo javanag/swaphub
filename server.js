@@ -196,9 +196,9 @@ app.post('/api/messages/:receiverId', (req, res) => {
     message.save().then((result) => {
         Message.populate(result, "sender")
             .then((msg) => {
-            log(msg)
-            res.send(msg)
-        }).catch((error) => res.status(400).send(error))
+                log(msg)
+                res.send(msg)
+            }).catch((error) => res.status(400).send(error))
 
         // res.redirect("/messages")
     }, (error) => {
@@ -445,6 +445,7 @@ app.get('/listings/:id', (req, res) => {
             if (!listing) {
                 res.status(404).send()
             } else {
+                const canDel = listing.isAdmin || listing.username === req.session.username
                 const data = {
                     id: listing.id,
                     title: listing.title,
@@ -456,6 +457,7 @@ app.get('/listings/:id', (req, res) => {
                     images: listing.images,
                     username: req.session.username,
                     isadmin: req.session.isAdmin,
+                    canDel: canDel,
                     offers: listing.offers
                 };
                 User.findOne({username: listing.username})

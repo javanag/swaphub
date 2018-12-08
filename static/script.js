@@ -18,7 +18,8 @@ function setAdminMode(mode) {
 
 let allListings = []
 
-const fetchAllListings = () => {
+const
+    fetchAllListings = () => {
     return fetch("/api/listings").then(res => res.json())
         .then(obj => {
             allListings = obj;

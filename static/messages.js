@@ -188,7 +188,6 @@ async function sendMessage(e, messageInput, otherUserID) {
 
 function renderMessage(message) {
     const container = document.createElement('div');
-    console.log(message.sender.username, "=", currentUser)
     if (message.sender.username === currentUser) {
         container.className = 'w-50 rounded mb-1 mt-1 mr-2 p-1 bg-warning text-left chatIndent';
     } else {

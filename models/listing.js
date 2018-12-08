@@ -18,8 +18,8 @@ const ListingSchema = new mongoose.Schema({
     description: String,
     likes: Number,
     offers: [{
-        bidder: { type: ObjectID, ref: 'User' },
-        bid: Number,
+        bidder: {type: ObjectID, ref: 'User'},
+        bid: {type: Number, required: true},
         date: Date
     }]
 })
