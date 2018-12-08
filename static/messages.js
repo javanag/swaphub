@@ -172,10 +172,11 @@ async function sendMessage(e, messageInput, otherUserID) {
             const message = renderMessage(msg);
             const oldLastMsg = document.getElementById("lastMsg")
             oldLastMsg.id = ""
-            oldLastMsg.classList.remove("mb-4")
+            oldLastMsg.classList.remove("mb-5")
             message.classList.add("mb-5");
             message.id = "lastMsg"
             messagesContainer.insertBefore(message, messagesContainer.lastChild)
+            message.scrollIntoView()
             messageInput.value = "" //submit listener fix
         })
         .catch((error) => {
