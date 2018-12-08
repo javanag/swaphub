@@ -366,29 +366,32 @@ app.get('/listings/:id', (req, res) => {
     }
 
     // Otheriwse, findById
-    Listing.findById(id).then((listing) => {
-        if (!listing) {
-            res.status(404).send()
-        } else {
-            const data = {
-                id: listing.id,
-                title: listing.title,
-                condition: listing.condition,
-                poster: listing.username,
-                price: listing.price,
-                date: date.format(new Date(listing.date), 'MMM D[,] YYYY'),
-                description: listing.description,
-                images: listing.images,
-                username: req.session.username,
-                isadmin: req.session.isAdmin
-            };
-            User.findOne({username: listing.username})
-                .then((user) => data["poster_profilepic"] = user.profilePic)
-                .then(() => res.render("listing_template", data))
+    Listing.findById(id).populate('offers.bidder')
+        .then((listing) => {
+            log(listing)
+            if (!listing) {
+                res.status(404).send()
+            } else {
+                const data = {
+                    id: listing.id,
+                    title: listing.title,
+                    condition: listing.condition,
+                    poster: listing.username,
+                    price: listing.price,
+                    date: date.format(new Date(listing.date), 'MMM D[,] YYYY'),
+                    description: listing.description,
+                    images: listing.images,
+                    username: req.session.username,
+                    isadmin: req.session.isAdmin,
+                    offers: listing.offers
+                };
+                User.findOne({username: listing.username})
+                    .then((user) => data["poster_profilepic"] = user.profilePic)
+                    .then(() => res.render("listing_template", data))
 
-        }
+            }
 
-    }).catch((error) => {
+        }).catch((error) => {
         res.status(400).send(error)
     })
 })
