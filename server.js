@@ -488,6 +488,35 @@ app.delete('/api/listings/:id', (req, res) => {
         res.status(400).send(error)
     })
 })
+
+app.post('/api/offer/:id', (req, res) => {
+    const id = req.params.id // the id is in the req.params object
+
+
+    // Good practise is to validate the id
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send()
+    }
+    const offer = {
+        bidder: req.session.user,
+        bid: parseFloat(req.body.offerBid)
+    }
+    // Otheriwse, findById
+    Listing.findById(id).then((listing) => {
+        if (!listing) {
+            res.status(404).send()
+        } else {
+            listing.offers.push(offer);
+            listing.save()
+                .then((result) => res.send(result),
+                    (error) => res.status(400).send(error));
+            log(listing)
+        }
+
+    }).catch((error) => {
+        res.status(400).send(error)
+    })
+})
 // endregion Listing Routes
 
 app.listen(port, () => {

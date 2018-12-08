@@ -5,8 +5,6 @@
 // const categoryDropDown = document.querySelector('#categoryDropDown');
 // const searchBar = document.querySelector('#searchBar');
 // const searchSubmit = document.querySelector('#searchSubmit');
-let currentListing;
-let usernameDOM;
 let priceDOM;
 let dateDOM;
 let titleDOM;
@@ -15,30 +13,17 @@ let ppDOM;
 let ppTextDOM;
 let conditionDOM;
 let listingInfo;
-let deletedListing;
+let offerButton;
+let offerSubmit;
+let offerModal;
+let successModal;
+let offerForm;
+let modalCloseBtn;
 
-
-let admin = false;
-
-const Listing = function (username, profilePicture, title, date, price, condition, category, thumbnail, description, likes) {
-    this.username = username;
-    this.profilePicture = profilePicture;
-    this.title = title;
-    this.date = date;
-    this.price = price;
-    this.condition = condition;
-    this.category = category;
-    this.thumbnail = thumbnail;
-    this.description = description;
-    this.likes = likes;
-}
 
 document.addEventListener('DOMContentLoaded', function () {
     //This loading of recent listings will be drawn from the server in the future.
     //So pretend allListings is the server I suppose.
-    currentListing = (new Listing('laflame92cactus', 'travis_pp.jpg', 'Adidas Yeezy 750 Boost', 'Oct 31, 2018', '2560.56', 'NEW', 'Fashion', 'yeezy750feet.jpg', 'New Yeezy 750 Boost signed by Kanye West. Size 13, comes in box, can provide receipt upon request.', 0));
-    //Following just a UI placeholder listing for deleting items
-    deletedListing = (new Listing('DELETED', 'travis_pp.jpg', 'DELETED', 'Oct 31, 2018', '0', 'DELETED', 'DELETED', 'yeezy750feet.jpg', 'THIS ITEM HAS BEEN DELETED', 0));
     //Render recent listings pulled from server;
     ppDOM = document.querySelector('#listingProfilePic');
     priceDOM = document.querySelector('#priceTag');
@@ -48,55 +33,91 @@ document.addEventListener('DOMContentLoaded', function () {
     ppTextDOM = document.querySelector('#profileText');
     conditionDOM = document.querySelector('#itemCondText');
     listingInfo = document.querySelector('#listingInfo');
+    offerButton = document.getElementById("offerBttn");
+    // bidSubmit = document.getElementById("offerSubmit");
+    offerModal = document.getElementById("offerModal");
+    successModal = document.getElementById("successModal");
+    offerForm = document.getElementById("offerForm");
+    modalCloseBtn = document.getElementById("modalCloseBtn");
+
+
+    const modalBody = document.getElementById("modalBody");
+    const modalFooter = document.querySelector(".modal-footer");
+    const bidForm = document.createElement("form");
+    // region bidForm
+    const formGrp = document.createElement("div");
+    formGrp.className = "form-group row";
+    bidForm.appendChild(formGrp);
+    const inputLabel = document.createElement("label");
+    inputLabel.className = "col-5 ol-form-label";
+    inputLabel.innerText = "Enter your bid:";
+    formGrp.appendChild(inputLabel);
+
+    const inputBid = document.createElement("input");
+    inputBid.className = "col-6 form-control";
+    inputBid.setAttribute("type", "number");
+    inputBid.setAttribute("step", "0.01");
+    formGrp.appendChild(inputBid)
+    // endregion bidForm
+    const successMsg = document.createElement("div");
+    successMsg.className = "alert alert-success";
+    successMsg.setAttribute("role", "alert");
+    successMsg.innerText = "Successfully placed a bid!";
+
+    const failMsg = document.createElement("div");
+    failMsg.className = "alert alert-danger";
+    failMsg.setAttribute("role", "alert");
+    failMsg.innerText = "Failed placing a bid!";
+
+    const bidSubmit = document.createElement("button");
+    bidSubmit.className = "btn btn-primary";
+    bidSubmit.setAttribute("type", "submit");
+    bidSubmit.innerText = "Submit"
 
     let carousel = document.querySelector('#carouselImageArray');
     carousel.querySelectorAll('div')[0].classList.add('active');
 
     setCondition();
+    offerButton.addEventListener("click", (e) => {
+        e.target.blur();
+        while(modalBody.firstChild)
+            modalBody.removeChild(modalBody.firstChild);
+        modalBody.appendChild(bidForm)
+        modalFooter.appendChild(bidSubmit)
+    });
+    bidSubmit.addEventListener("click", (e) => {
+        e.preventDefault();
+        modalBody.removeChild(bidForm)
+        modalFooter.removeChild(bidSubmit)
+        const data = {
+            offerBid: inputBid.value
+        }
+        fetch('/api/offer/' + id, {
+            method: "POST", // *GET, POST, PUT, DELETE, etc.
+            // mode: "cors", // no-cors, cors, *same-origin
+            // cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+            // credentials: "same-origin", // include, *same-origin, omit
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+                // "Content-Type": "application/x-www-form-urlencoded",
+            },
+            // redirect: "error", // manual, *follow, error
+            // referrer: "no-referrer", // no-referrer, *client
+            body: JSON.stringify(data), // body data type must match "Content-Type" header
+        }).then((res) => {
+            if (res.status === 200) {
+                console.log("placed a bid!");
+                modalBody.appendChild(successMsg)
+            } else {
+                // alert('Could not place bid')
+                modalBody.appendChild(failMsg)
+            }
+        }).catch((error) => console.log(error))
+        e.target.blur()
+    })
 });
 
-// function setDOMListingValues(currentListing) {
-//     // setItemDOM(listing)
-//     setItemDescriptionDOM(currentListing)
-// }
-
-// function setItemDOM(listing) {
-// }
-
-/*
-function setItemDescriptionDOM() {
-    var filepath = "img/"
-    profileText.innerText = currentListing.username
-    ppDOM.setAttribute("src", filepath + currentListing.profilePicture)
-    priceDOM.innerText = '$' + currentListing.price
-    dateDOM.innerText = currentListing.date
-    descDOM.innerText = currentListing.description
-    titleDOM.innerText = currentListing.title
-
-    if(admin){
-        const deleteButton = document.createElement('button');
-        deleteButton.className = "btn btn-outline-danger w-100";
-        deleteButton.innerText = "Delete";
-        deleteButton.addEventListener("click", deleteListing);
-        listingInfo.appendChild(deleteButton);
-    }
-    setCondition()
-}
-
-function deleteListing(){
-    //In this function the client should tell the server which listing
-    //to delete from the server side listings database, only when the
-    //user has the correct credentials: eg when admin, or the user who
-    //oriinally posted the listing.
-    const oldTitle = currentListing.title;
-    currentListing = deletedListing;
-    setItemDescriptionDOM();
-    window.alert("Listing: " + oldTitle + " has been deleted.");
-    window.location.href = "listings_admin.html";
-}
-*/
-
-function setCondition(){
+function setCondition() {
     if (conditionDOM.innerText == 'NEW') {
         conditionDOM.setAttribute("class", 'text-success');
     } else if (conditionDOM.innerText == 'USED') {

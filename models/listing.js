@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const ObjectID = mongoose.Schema.Types.ObjectId;
 
 const ListingSchema = new mongoose.Schema({
     username: {
@@ -15,7 +16,11 @@ const ListingSchema = new mongoose.Schema({
     thumbnail: String,
     images: [String],
     description: String,
-    likes: Number
+    likes: Number,
+    offers: [{
+        bidder: { type: ObjectID, ref: 'User' },
+        bid: Number
+    }]
 })
 
 const Listing = mongoose.model('Listing', ListingSchema)
