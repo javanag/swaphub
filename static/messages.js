@@ -60,6 +60,7 @@ function renderConversationMessages(otherUser, otherUserID) {
     // const otherUserID = event.target.otherUserID
     console.log('Loading messages with ' + otherUser);
     convoPartnerTitle.querySelector('h4').innerHTML = otherUser;
+    convoPartnerTitle.setAttribute("href", "/users/"+otherUser)
     conversation = [];
     // let otherUserObj;
     messages.forEach(msg => {
