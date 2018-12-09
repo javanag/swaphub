@@ -458,7 +458,8 @@ app.get('/listings/:id', (req, res) => {
                     username: req.session.username,
                     isadmin: req.session.isAdmin,
                     canDel: canDel,
-                    offers: listing.offers
+                    offers: listing.offers,
+                    views: ++listing.views
                 };
                 User.findOne({username: listing.username})
                     .then((user) => data["poster_profilepic"] = user.profilePic)
@@ -527,7 +528,7 @@ app.post('/api/listings', uploadStrategy, (req, res) => {
         thumbnail: imageBaseURL + "listings/" + thumbnailFile.originalname,
         images: imagesFile.map((image) => imageBaseURL + "listings/" + image.originalname),
         description: req.body.description,
-        likes: 0
+        views: 0
     });
 
     // log(listing)

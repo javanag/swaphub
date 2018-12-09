@@ -16,7 +16,7 @@ const ListingSchema = new mongoose.Schema({
     thumbnail: String,
     images: [String],
     description: String,
-    likes: Number,
+    views: {type: Number, default: 0},
     offers: [{
         bidder: {type: ObjectID, ref: 'User'},
         bid: {type: Number, required: true},
