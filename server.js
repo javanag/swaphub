@@ -441,7 +441,6 @@ app.get('/listings/:id', (req, res) => {
     // Otheriwse, findById
     Listing.findById(id).populate('offers.bidder')
         .then((listing) => {
-            log(listing)
             if (!listing) {
                 res.status(404).send()
             } else {
@@ -461,6 +460,7 @@ app.get('/listings/:id', (req, res) => {
                     offers: listing.offers,
                     views: ++listing.views
                 };
+                listing.save() // update view count
                 User.findOne({username: listing.username})
                     .then((user) => data["poster_profilepic"] = user.profilePic)
                     .then(() => res.render("listing_template", data))
