@@ -8,4 +8,39 @@ Login credentials:
 
     User - username: laflame92cactus
            password: 1234321
-   
+
+How to use web app:
+
+
+either run node server.js locally or the hosted version at swaphub.herokuapp.com.
+The index page will be the listings page. 
+
+To log in, click login/sign up button in the nav bar at top of page. Once logged in
+to log out, click logout button in nav bar.
+
+Within navbar, the listings page shows all listings
+on swap hub (only on the listings page the category dropdown filter will work by only showing listings of a certain category, and the search bar will only show listings matching given keywords)
+
+The sell item in navbar gives ability to create your own listing, but this is only
+available to logged in users. 
+
+Once logged in, an envelope symbol in the navbar is the way for users to check their
+direct messages with other users, either sellers or buyers.
+
+**All admin functionality is the same as user functionality, except that admins
+have the ability to remove ANY listing and ANY user profile.
+
+
+New Features:
+
+
+-Ability to create listing
+-Ability to message other users
+-Ability to make offers on listings, and for sellers to accept offers
+
+Routes overview:
+
+Routes prefixed with /api/ are for data manipulation such as getting list of users/adding new listing/sending message etc
+
+The other routes are for rendering views
+
