@@ -257,7 +257,7 @@ function createListingDOM(listing) {
     title.classList.add('text-center');
 
     const titleLink = document.createElement('a');
-    titleLink.setAttribute('href', '/listings/' + listing.id);//TODO:
+    titleLink.setAttribute('href', '/listings/' + listing._id);//TODO:
     titleLink.classList.add('listingTitleLink');
 
     const titleLinkH5 = document.createElement('h5');

@@ -14,18 +14,25 @@
 <!--Reusable navbar-->
 <script type="text/javascript" src="navbar.js"></script>
 <script>
-        {{#sessUser}}
-        setupNavbarUser("{{sessUser}}", "{{sessUser}}.jpg");
+        {{#username}}
+        setupNavbarUser("{{username}}", "{{username}}.jpg");
         createNavbar("profile");
-        {{/sessUser}}
-        {{^sessUser}}
+        {{/username}}
+        {{^username}}
         createNavbar("profile", false);
-        {{/sessUser}}
+        {{/username}}
 </script>
 <!--Reusable navbar ends-->
-<div class="container">
-    <p>
-        Pornhub is a Canadian pornographic video sharing website and the largest pornography site on the Internet.[5][6] Pornhub was launched in Montreal, providing professional and amateur photography since 2007.[7] Pornhub also has offices and servers in San Francisco, Houston, New Orleans and London. In March 2010, Pornhub was bought by Manwin (now known as MindGeek), which owns numerous other pornographic websites.
+<div class="container row mx-auto">
+    <p class="mt-5  col-7">
+        SwapHub is a Canadian marketplace website
+        and the largest marketplace site on the Internet.
+        SwapHub was launched in Toronto, providing professional
+        and amateur marketplace since 2018.
+        SwapHub also has offices and servers in San Francisco, Houston,
+        New Orleans and London. In March 2018, SwapHub was bought by
+        Manwin (now known as MindGeek), which owns numerous other
+        marketplace websites.
     </p>
 </div>
 

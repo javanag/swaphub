@@ -127,7 +127,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/about', (req, res) => {
-    res.render("about", {username: req.session})
+    res.render("about", {username: req.session.username})
 })
 
 
