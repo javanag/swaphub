@@ -35,8 +35,11 @@ const UserSchema = new mongoose.Schema({
     firstName: String,
     lastName: String,
     profilePic: String,
-    userListings: [{ type: ObjectID, ref: 'Listing' }]
-    // userReviews: [{ type: ObjectID, ref: 'Review' }]
+    userListings: [{type: ObjectID, ref: 'Listing'}],
+    soldCounter: {
+        type: Number,
+        default: 0
+    }
 })
 UserSchema.statics.findByUsername = function (username) {
     const User = this

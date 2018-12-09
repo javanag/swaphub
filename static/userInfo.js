@@ -3,58 +3,22 @@
 const userInfoContainer = document.querySelector('#userInfoContainer');
 let admin = false;
 
-//Review Object
-function Review(writerUser, subjectUser, subjectListing, overallRating, text) {
-    this.writer = writerUser;
-    this.reviewedUser = subjectUser;
-    this.reviewedListing = subjectListing;
-    this.overallRating = overallRating;
-    this.reviewText = text;
-}
-
-// User Info. object
-function UserInfo(firstName, lastName, email, userName,
-                  password, profilePic) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.email = email;
-    this.userName = userName;
-    this.password = password;
-    this.profilePic = profilePic;
-    this.userListings = [];
-    this.userReviews = [];
-    this.isAdmin = false;
-}
-
-// UserInfo default functions:
-UserInfo.prototype.addReview =
-    function (writerUser, subjectListing, overallRating, text) {
-        const newReview = new Review(writerUser, this,
-            subjectListing, overallRating, text);
-        this.userReviews.push(newReview);
-        return newReview;
-    };
-
-const userRate = function (user) {
-    let sum = 0;
-    for (let i = 0; i < user.userReviews.length; i++) {
-        sum += user.userReviews[i].overallRating;
-    }
-    return sum / (user.userReviews.length);
-};
 
 //Master function
 function createProfilePage() {
     let isAdmin;
-    fetch("/api/users/" + sessUsername).then(res => res.json())
-        .then(user => isAdmin = user.isAdmin)
-        .catch((error) => console.log(error));
+    if (sessUsername)
+        fetch("/api/users/" + sessUsername).then(res => res.json())
+            .then(user => isAdmin = user.isAdmin)
+            .catch((error) => console.log(error));
+    else isAdmin = false;
 
     fetch("/api/users/" + reqUsername).then(res => res.json())
         .then(user => {
             displayProfileInfo(user, isAdmin);
+            // if (user.userListings.length)
             displayUserListings(user.userListings);
-            displayUserReviews(user.userReviews);
+            // displayUserReviews(user.userReviews);
         }).catch((error) => console.log(error))
 }
 
@@ -127,13 +91,13 @@ function displayProfileInfo(userInfo, isAdmin) {
 
     const rating = document.createElement('div');
     rating.className = "col-form-label";
-    rating.innerText = "Rating:";
+    rating.innerText = "Listings sold:";
     fieldKeys.appendChild(rating);
 
     const ratingVal = document.createElement('div');
     ratingVal.className = "form-control-plaintext";
     // ratingVal.innerText = userRate(userInfo);
-    ratingVal.innerText = "4" //TODO: fix
+    ratingVal.innerText = userInfo.soldCounter //TODO: fix
     fieldValues.appendChild(ratingVal);
 
     if (isAdmin || sessUsername === reqUsername) {
@@ -267,6 +231,13 @@ function displayUserListings(userListings) {
     userInfoContainer.appendChild(listingTextNode);
     userInfoContainer.appendChild(listingsElement);
 
+    if (!userListings.length) {
+        const noListings = document.createElement("h4")
+        noListings.innerText = "None yet (:"
+        noListings.className = "text-muted"
+        listingsElement.appendChild(noListings)
+        return
+    }
     for (let i = 0; i < userListings.length; i++) {
         const element = createListingDOM(userListings[i]);
         listingsElement.appendChild(element);
@@ -436,12 +407,3 @@ function createReviewDOM(review) {
 
     return reviewElement;
 }
-
-// let userToDisplay;
-// if (!location.hash)
-// //randomizing for fun
-//     userToDisplay = userArray[Math.floor(Math.random() * 3)];
-// else {
-//     let urlHash = location.hash.substr(1);
-//     userToDisplay = userMap[urlHash];
-// }
