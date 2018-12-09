@@ -36,55 +36,28 @@ function removeDuplicates(myArr, prop) {
 }
 
 async function makeUpMessages() {
-    // messages.push(new Message('moomi', 'laflame92cactus', 'true', 'Hi can I please get one boneless pizza?', new Date()));
-    // messages.push(new Message('laflame92cactus', 'moomi', 'false', 'Yeah sure, would you like a 2L coke to go with your pizza?', new Date()));
-    // messages.push(new Message('moomi', 'laflame92cactus', 'true', 'Yes please. Where should I meet you?', new Date()));
-    // messages.push(new Message('moomi', 'gaspump2000', 'false', 'Hey can I see some more pictures of your yeezys?', new Date()));
-    // messages.push(new Message('moomi', 'gaspump2000', 'false', 'I kinda just wanted some closeups of the soles', new Date()));
-    // messages.push(new Message('gaspump2000', 'moomi', 'true', 'Alright but I\'m in the studio rn, dm you back later', new Date()));
-    // messages.push(new Message('laflame92cactus', 'moomi', 'false', 'Uhhh, come to the third floor bahen men\'s washroom. Do you know where that is?', new Date()));
-    // messages.push(new Message('moomi', 'laflame92cactus', 'true', 'yep, be there in 20 mins', new Date()));
-    // messages.push(new Message('moomi', 'laflame92cactus', 'true', 'by the way i wanna test what happens when you have a lot of texts that have a lot of text or at least a fair amount that will span many lines and take up a good portion of the screen real estate', new Date()));
-    // messages.push(new Message('moomi', 'laflame92cactus', 'true', 'by the way i wanna test what happens when you have a lot of texts that have a lot of text or at least a fair amount that will span many lines and take up a good portion of the screen real estate', new Date()));
-    // messages.push(new Message('moomi', 'laflame92cactus', 'true', 'by the way i wanna test what happens when you have a lot of texts that have a lot of text or at least a fair amount that will span many lines and take up a good portion of the screen real estate', new Date()));
-    // messages.push(new Message('moomi', 'laflame92cactus', 'true', 'by the way i wanna test what happens when you have a lot of texts that have a lot of text or at least a fair amount that will span many lines and take up a good portion of the screen real estate', new Date()));
-    // messages.push(new Message('moomi', 'laflame92cactus', 'true', 'by the way i wanna test what happens when you have a lot of texts that have a lot of text or at least a fair amount that will span many lines and take up a good portion of the screen real estate', new Date()));
-    // messages.push(new Message('moomi', 'laflame92cactus', 'true', 'by the way i wanna test what happens when you have a lot of texts that have a lot of text or at least a fair amount that will span many lines and take up a good portion of the screen real estate', new Date()));
-    // messages.push(new Message('moomi', 'laflame92cactus', 'true', 'by the way i wanna test what happens when you have a lot of texts that have a lot of text or at least a fair amount that will span many lines and take up a good portion of the screen real estate', new Date()));
-    // messages.push(new Message('moomi', 'laflame92cactus', 'true', 'by the way i wanna test what happens when you have a lot of texts that have a lot of text or at least a fair amount that will span many lines and take up a good portion of the screen real estate', new Date()));
-    // messages.push(new Message('moomi', 'laflame92cactus', 'true', 'by the way i wanna test what happens when you have a lot of texts that have a lot of text or at least a fair amount that will span many lines and take up a good portion of the screen real estate', new Date()));
-    // messages.push(new Message('moomi', 'laflame92cactus', 'true', 'by the way i wanna test what happens when you have a lot of texts that have a lot of text or at least a fair amount that will span many lines and take up a good portion of the screen real estate', new Date()));
-    // messages.push(new Message('moomi', 'laflame92cactus', 'true', 'by the way i wanna test what happens when you have a lot of texts that have a lot of text or at least a fair amount that will span many lines and take up a good portion of the screen real estate', new Date()));
     const response = await fetch('/api/messages');
     messages = await response.json();
-    console.log(messages)
-}
-
-function Message(sender, receiver, read, content, date) {
-    this.sender = sender;
-    this.receiver = receiver;
-    this.read = read;
-    this.content = content;
-    this.date = date;
 }
 
 function renderConversation(user) {
     const container = document.createElement('button');
     container.className = 'w-100 p-3 border-bottom btn btn-light text-left';
     container.appendChild(document.createTextNode(user.username));
-    container.addEventListener("click", renderConversationMessages);
     container.otherUser = user.username;
     container.otherUserID = user._id;
     usersList.appendChild(container);
+    container.addEventListener("click", (e) =>
+        renderConversationMessages(user.username, user._id));
 }
 
-function renderConversationMessages(event) {
+function renderConversationMessages(otherUser, otherUserID) {
     //remove all mesages already loaded
     while (messagesContainer.childElementCount > 1) {
         messagesContainer.removeChild(messagesContainer.lastChild);
     }
-    const otherUser = event.target.otherUser
-    const otherUserID = event.target.otherUserID
+    // const otherUser = event.target.otherUser
+    // const otherUserID = event.target.otherUserID
     console.log('Loading messages with ' + otherUser);
     convoPartnerTitle.querySelector('h4').innerHTML = otherUser;
     conversation = [];
@@ -133,7 +106,7 @@ function renderConversationMessages(event) {
     messageInput.className = "form-control w-100";
     messageInput.setAttribute("type", "text");
     messageInput.required = true;
-    messageInput.setAttribute("placeholder", "Write something to " + event.target.otherUser + '...');
+    messageInput.setAttribute("placeholder", "Write something to " + otherUser + '...');
     formContainer.appendChild(messageInput);
 
     const sendButton = document.createElement("button");
@@ -171,8 +144,10 @@ async function sendMessage(e, messageInput, otherUserID) {
             console.log("Appending new msg..", msg)
             const message = renderMessage(msg);
             const oldLastMsg = document.getElementById("lastMsg")
-            oldLastMsg.id = ""
-            oldLastMsg.classList.remove("mb-5")
+            if (oldLastMsg) {
+                oldLastMsg.id = ""
+                oldLastMsg.classList.remove("mb-5")
+            }
             message.classList.add("mb-5");
             message.id = "lastMsg"
             messagesContainer.insertBefore(message, messagesContainer.lastChild)

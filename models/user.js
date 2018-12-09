@@ -48,7 +48,7 @@ UserSchema.statics.findByUsername = function (username) {
             return Promise.reject()
         }
         return new Promise((res, rej) => {
-            resolve(user)
+            res(user)
         })
     })
 }

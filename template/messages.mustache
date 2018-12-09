@@ -27,11 +27,21 @@
         <div class="w-100 p-3 text-center border-bottom"><h4>Conversations</h4></div>
     </div>
     <div id="conversationContainer" class="h-100">
-        <div id="convoPartnerTitle" class="w-100 p-3 text-center border-bottom"><h4> </h4></div>
+        <div id="convoPartnerTitle" class="w-100 p-3 text-center border-bottom"><h4></h4></div>
     </div>
 </div>
 
 <script type="text/javascript" src="messages.js"></script>
-<script> const currentUser = "{{username}}"; //current username of session</script>
+<script>
+    const currentUser = "{{username}}"; //current username of session
+        {{#receiver}}
+        const openMsg = {
+            _id: "{{_id}}",
+            username: "{{username}}"
+        };
+        // renderConversation(openMsg);
+        setTimeout(() => renderConversationMessages(openMsg.username, openMsg._id), 500)
+        {{/receiver}}
+</script>
 </body>
 </html>

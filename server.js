@@ -156,15 +156,32 @@ app.get('/users/logout', (req, res) => {
 })
 
 //load messages page:
-app.get('/messages', (req, res) => {
-    if (req.session.user) {
-        res.render("messages", {
-            username: req.session.username
-        });
-    } else {
-        res.redirect("/login");
-    }
+app.get('/messages', authenticate, (req, res) => {
+    res.render("messages", {
+        username: req.user.username
+    })
 })
+// open chat with user
+app.get('/messages/:username', authenticate, (req, res) => {
+    const receiver = req.params.username;
+
+    User.findByUsername(receiver).then((otherUser) => {
+        if (!otherUser) {
+            res.status(404).send()
+        } else {
+            res.render("messages", {
+                username: req.user.username,
+                receiver: {
+                    username: otherUser.username,
+                    _id: otherUser._id
+                }
+            })
+        }
+
+    })
+})
+
+//get all messages for logged user
 app.get('/api/messages', authenticate, (req, res) => {
     Message.find().or([{sender: req.user._id}, {receiver: req.user._id}])
         .populate('sender').populate('receiver')
@@ -175,9 +192,9 @@ app.get('/api/messages', authenticate, (req, res) => {
         }).catch((error) => res.status(400).send(error))
 
 });
-
-app.post('/api/messages/:receiverId', (req, res) => {
-    const receiverID = req.params.receiverId;
+// add message from logged user to receiver
+app.post('/api/messages/:id', authenticate, (req, res) => {
+    const receiverID = req.params.id;
 
     if (!ObjectID.isValid(receiverID)) {
         log("ID not valid")
@@ -185,7 +202,7 @@ app.post('/api/messages/:receiverId', (req, res) => {
     }
     // Create a new message
     const message = new Message({
-        sender: req.session.user,
+        sender: req.user._id,
         receiver: receiverID,
         read: true,
         content: req.body.content,
@@ -354,7 +371,6 @@ app.post('/api/users/update/:id', (req, res) => {
                     continue;
                 user[key] = data[key]
             }
-            log(user)
             user.save().then((result) => {
                 // res.send(user)
                 res.redirect("/users/" + user.username)
@@ -567,12 +583,12 @@ app.delete('/api/listings/:id', (req, res) => {
         res.status(400).send(error)
     })
 })
-
+// Add offer to listing
 app.post('/api/offer/:id', (req, res) => {
-    const id = req.params.id // the id is in the req.params object
+    const listingId = req.params.id // the id is in the req.params object
 
     // Good practise is to validate the id
-    if (!ObjectID.isValid(id)) {
+    if (!ObjectID.isValid(listingId)) {
         return res.status(404).send()
     }
     const offer = {
@@ -581,7 +597,7 @@ app.post('/api/offer/:id', (req, res) => {
         date: Date.now()
     }
     // Otheriwse, findById
-    Listing.findById(id).then((listing) => {
+    Listing.findById(listingId).then((listing) => {
         if (!listing) {
             res.status(404).send()
         } else {
@@ -596,7 +612,8 @@ app.post('/api/offer/:id', (req, res) => {
         res.status(400).send(error)
     })
 })
-
+// Confirm offer of listing
+// app.post('/api/offer/accept/:id')
 // endregion Listing Routes
 
 app.listen(port, () => {
