@@ -18,7 +18,10 @@
 <script>
         {{#username}}
         setupNavbarUser("{{username}}", "{{username}}.jpg");
-        createNavbar("profile");
+        createNavbar("listings");
+        {{/username}}
+        {{^username}}
+        createNavbar("listings", false);
         {{/username}}
 </script>
 <!--Reusable navbar ends-->

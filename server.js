@@ -62,6 +62,7 @@ app.use('/users', express.static('static'));
 app.use('/sell', express.static('static'));
 app.use('/login', express.static('static'));
 app.use('/messages', express.static('static'));
+app.use('/about', express.static('static'));
 
 // body-parser middleware setup.  Will parse the JSON and convert to object
 app.use(bodyParser.json());
@@ -123,6 +124,10 @@ app.get('/', (req, res) => {
     //     res.redirect('/login/')
     // }
     res.redirect('/listings/')
+})
+
+app.get('/about', (req, res) => {
+    res.render("about", {username: req.session})
 })
 
 

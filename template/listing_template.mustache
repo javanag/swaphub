@@ -123,7 +123,7 @@
                         </a>
                     </span>
                     bid <h5 class="text-success d-inline">${{bid}}</h5> on {{date}}
-                    <button class="btn btn-success acceptOffer" bidder="{{bidder.username}}" listing="{{title}}" data-toggle="modal" data-target="#acceptModal">Accept Offer</button>
+                    <button class="btn btn-success acceptOffer" bidder="{{bidder.username}}" bidderId="{{bidder._id}}" listing="{{title}}" data-toggle="modal" data-target="#acceptModal">Accept Offer</button>
                 </div>
             {{/offers}}
         {{/canDel}}

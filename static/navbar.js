@@ -61,6 +61,7 @@ const navItems = {
         itemsArray[2].firstChild.setAttribute("href", "/sell/");
         // About
         itemsArray[3].firstChild.innerText = "About";
+        itemsArray[3].firstChild.setAttribute("href", "/about/");
     },
     "profile": function (ulContainer) {
         const itemsArray = [];
@@ -82,6 +83,7 @@ const navItems = {
         itemsArray[1].firstChild.setAttribute("href", "/sell/");
         // About
         itemsArray[2].firstChild.innerText = "About";
+        itemsArray[2].firstChild.setAttribute("href", "/about/");
         if (index) {
             itemsArray.splice(1, 1);
         }

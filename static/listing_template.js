@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
     finalOfferAcceptButton = document.getElementById("finalOfferAcceptButton");
 
     const acceptOfferButtons = document.querySelectorAll(".acceptOffer");
-    for(let i = 0; i < acceptOfferButtons.length; i++){
+    for (let i = 0; i < acceptOfferButtons.length; i++) {
         acceptOfferButtons[i].addEventListener("click", updateOfferAcceptModal);
     }
 
@@ -75,35 +75,40 @@ document.addEventListener('DOMContentLoaded', function () {
         submitBid(e, modalBody, modalFooter, bidForm, bidSubmit, inputBid, successMsg, failMsg))
 });
 
-function updateOfferAcceptModal(e){
+function updateOfferAcceptModal(e) {
     console.log(e.target);
     const bidder = e.target.getAttribute('bidder');
+    const bidderId = e.target.getAttribute('bidderId');
     console.log(bidder);
     const listing = e.target.getAttribute('listing');
     const acceptModalTitle = document.querySelector("#acceptModalLabel");
     acceptModalTitle.innerHTML = "Accept offer by " + bidder + "?";
     const acceptModalBody = document.querySelector("#acceptModalBody");
     acceptModalBody.innerHTML = "This will send an automated message notifying " + bidder +
-     " that their offer was accepted.";
+        " that their offer was accepted.";
     finalOfferAcceptButton.addEventListener("click", (e) => {
-        sendAutomatedMessage(e, bidder, listing);
+        sendAutomatedMessage(e, bidder, bidderId, listing);
     });
 }
 
-async function sendAutomatedMessage(e, bidder, listing){
+async function sendAutomatedMessage(e, bidder, bidderId, listing) {
     const data = {content: "[AUTO] Hello, " + bidder + "! Your offer for listing: \"" + listing + "\" has been accepted."};
-    await fetch("/api/messages/" + bidder, {
+    await fetch("/api/messages/" + bidderId, {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
             "Content-Type": "application/json; charset=utf-8"
         }
     }).then(res => {
-            if (res.status === 200)
-                return res.json()
-            else
-                console.log("ERROR")
-        })
+        if (res.status === 200)
+            fetch("/api/listings/" + listingId,
+                {method: 'delete'}).then(result => result.json())
+                .then(listing => {
+                    window.location.replace("/messages/"+bidder)
+                })
+        else
+            console.log("ERROR")
+    })
 }
 
 function setCondition() {
