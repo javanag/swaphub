@@ -13,6 +13,7 @@
 // let ppTextDOM;
 let conditionDOM;
 let offerButton;
+let finalOfferAcceptButton;
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -21,6 +22,12 @@ document.addEventListener('DOMContentLoaded', function () {
     //Render recent listings pulled from server;
     conditionDOM = document.querySelector('#itemCondText');
     offerButton = document.getElementById("offerBttn");
+    finalOfferAcceptButton = document.getElementById("finalOfferAcceptButton");
+
+    const acceptOfferButtons = document.querySelectorAll(".acceptOffer");
+    for(let i = 0; i < acceptOfferButtons.length; i++){
+        acceptOfferButtons[i].addEventListener("click", updateOfferAcceptModal);
+    }
 
     const modalBody = document.getElementById("modalBody");
     const modalFooter = document.querySelector(".modal-footer");
@@ -67,6 +74,37 @@ document.addEventListener('DOMContentLoaded', function () {
     bidForm.addEventListener("submit", (e) =>
         submitBid(e, modalBody, modalFooter, bidForm, bidSubmit, inputBid, successMsg, failMsg))
 });
+
+function updateOfferAcceptModal(e){
+    console.log(e.target);
+    const bidder = e.target.getAttribute('bidder');
+    console.log(bidder);
+    const listing = e.target.getAttribute('listing');
+    const acceptModalTitle = document.querySelector("#acceptModalLabel");
+    acceptModalTitle.innerHTML = "Accept offer by " + bidder + "?";
+    const acceptModalBody = document.querySelector("#acceptModalBody");
+    acceptModalBody.innerHTML = "This will send an automated message notifying " + bidder +
+     " that their offer was accepted.";
+    finalOfferAcceptButton.addEventListener("click", (e) => {
+        sendAutomatedMessage(e, bidder, listing);
+    });
+}
+
+async function sendAutomatedMessage(e, bidder, listing){
+    const data = {content: "[AUTO] Hello, " + bidder + "! Your offer for listing: \"" + listing + "\" has been accepted."};
+    await fetch("/api/messages/" + bidder, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+            "Content-Type": "application/json; charset=utf-8"
+        }
+    }).then(res => {
+            if (res.status === 200)
+                return res.json()
+            else
+                console.log("ERROR")
+        })
+}
 
 function setCondition() {
     if (conditionDOM.innerText == 'NEW') {
