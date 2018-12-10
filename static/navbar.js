@@ -109,7 +109,7 @@ function createNavbar(siteView, loggedIn = true) {
     navButton.className = "navbar-toggler";
     navButton.setAttribute('type', 'button');
     navButton.setAttribute('data-toggle', 'collapse');
-    navButton.setAttribute('data-target', '#navbarNav');
+    navButton.setAttribute('data-target', '#navebarNav');
     navButton.setAttribute('aria-controls', 'navbarNav');
     navButton.setAttribute('aria-expanded', 'false');
     navButton.setAttribute('aria-labeal', 'Toggle navigation');
